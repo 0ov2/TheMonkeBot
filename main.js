@@ -32,17 +32,17 @@ client.once('ready', () => { // automatic commands
     var roleClaim = client.channels.cache.get("803779865190203422");
 
     // role claim message
-    //roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
+    roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
 
     // Availability
     schedule.scheduleJob('* * * * *', () => {  //0 10 * * 1 - correct time avail
         console.log('monke do availability');
         try {
        
-        //opAvailabilityId.send(client.command.get('autoAvailability').execute(client)); // handle errors 
-        //dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client)); // handle errors 
-        //opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client));
-        //dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client));
+        opAvailabilityId.send(client.command.get('autoAvailability').execute(client)); // handle errors 
+        dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client)); // handle errors 
+        opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client));
+        dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client));
         
         } catch (error) {
             console.log(error);
@@ -56,7 +56,7 @@ client.once('ready', () => { // automatic commands
         console.log('monke do mxf');
 
         try {
-            //mixedFriendlyAnnouncement.send(client.command.get('mixedFriendlyAnnouncement').execute(client));
+            mixedFriendlyAnnouncement.send(client.command.get('mixedFriendlyAnnouncement').execute(client));
         } catch (q) {
             console.log(q);
         } finally{
