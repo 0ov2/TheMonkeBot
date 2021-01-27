@@ -60,7 +60,7 @@ client.once('ready', () => { // automatic commands
         } catch (q) {
             console.log(q);
         } finally{
-            console.log('monke done. *monke noises*');
+            console.log('monke done. *monke noises* ');
         }
     })
 })
