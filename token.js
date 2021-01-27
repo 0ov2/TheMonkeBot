@@ -1,1 +1,1 @@
-module.exports = 'dd';
+module.exports = '';
