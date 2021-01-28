@@ -8,6 +8,8 @@ const fs = require('fs');
 
 const token = require("./token.js");
 
+const botMembers = require("./botMembers");
+
 var schedule = require('node-schedule');
 
 client.command = new Discord.Collection();
@@ -22,27 +24,27 @@ for (const file of commandFiles){
 
 client.once('ready', () => { // automatic commands
     console.log('monke');
+    console.log(botMembers);
 
-    //turn into constructor
-    var opAvailabilityId = client.channels.cache.get("761305181827629076"); 
+    var opAvailabilityId = client.channels.cache.get("761305181827629076"); // 796857177796378654
     var dtAvailabilityId = client.channels.cache.get("761305214677811210");
-    var opMatchAnnouncement = client.channels.cache.get("803397507182624778");
+    var opMatchAnnouncement = client.channels.cache.get("803397507182624778"); // 796857249921630238
     var dtMatchAnnouncement = client.channels.cache.get("803432126836899901");
     var mixedFriendlyAnnouncement = client.channels.cache.get("803417327210201108");
     var roleClaim = client.channels.cache.get("803779865190203422");
 
     // role claim message
-    roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
+    //roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
 
     // Availability
     schedule.scheduleJob('* * * * *', () => {  //0 10 * * 1 - correct time avail
         console.log('monke do availability');
         try {
        
-        opAvailabilityId.send(client.command.get('autoAvailability').execute(client)); // handle errors 
-        dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client)); // handle errors 
-        opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client));
-        dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client));
+        //opAvailabilityId.send(client.command.get('autoAvailability').execute(client)); // handle errors 
+        //dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client)); // handle errors 
+        //opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client));
+        //dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client));
         
         } catch (error) {
             console.log(error);
@@ -56,7 +58,7 @@ client.once('ready', () => { // automatic commands
         console.log('monke do mxf');
 
         try {
-            mixedFriendlyAnnouncement.send(client.command.get('mixedFriendlyAnnouncement').execute(client));
+            //mixedFriendlyAnnouncement.send(client.command.get('mixedFriendlyAnnouncement').execute(client));
         } catch (q) {
             console.log(q);
         } finally{
@@ -78,6 +80,9 @@ client.on('message', message => { // manual commands
         message.delete();
     } else if (command === 'clear') {
         client.command.get('clear').execute(message, args);
+    } else if (command === 'slow') {
+        client.command.get('slowmode').execute(message, args);
+        message.delete();
     }
 })
 
