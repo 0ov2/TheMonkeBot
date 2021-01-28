@@ -6,7 +6,7 @@ const prefix = '-';
 
 const fs = require('fs');
 
-const token = require("./token.js");
+//const token = require("./token.js");
 
 const botMembers = require("./botMembers");
 
@@ -92,4 +92,4 @@ client.on('guildMemberAdd', member => {
     client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
 })
 
-client.login(token);
+client.login(process.env.token);
