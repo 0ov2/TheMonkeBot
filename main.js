@@ -8,8 +8,6 @@ const fs = require('fs');
 
 //const token = require("./token.js");
 
-const botMembers = require("./botMembers");
-
 var schedule = require('node-schedule');
 
 client.command = new Discord.Collection();
@@ -24,28 +22,27 @@ for (const file of commandFiles){
 
 client.once('ready', () => { // automatic commands
     console.log('monke');
-    console.log(botMembers);
-
-    var opAvailabilityId = client.channels.cache.get("761305181827629076"); // 796857177796378654
-    var dtAvailabilityId = client.channels.cache.get("761305214677811210");
-    var opMatchAnnouncement = client.channels.cache.get("803397507182624778"); // 796857249921630238
-    var dtMatchAnnouncement = client.channels.cache.get("803432126836899901");
-    var mixedFriendlyAnnouncement = client.channels.cache.get("803417327210201108");
-    var roleClaim = client.channels.cache.get("803779865190203422");
+    const opAvailabilityId = client.channels.cache.find(ch => ch.name === 'op-availability');
+    const dtAvailabilityId = client.channels.cache.find(ch => ch.name === 'dt-availability');
+    const opMatchAnnouncement = client.channels.cache.find(ch => ch.name === 'op-match-announcements');
+    const dtMatchAnnouncement = client.channels.cache.find(ch => ch.name === 'dt-match-announcements');
+    const biAvailabilityId = client.channels.cache.find(ch => ch.name === 'bi-availability');
+    //const mixedFriendlyAnnouncement = client.channels.cache.find(ch => ch.name === 'op-availability');
+    //const roleClaim = client.channels.cache.find(ch => ch.name === 'op-availability');
 
     // role claim message
     //roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
 
     // Availability
-    schedule.scheduleJob('* * * * *', () => {  //0 10 * * 1 - correct time avail
+    schedule.scheduleJob('0 10 * * 1', () => {  //* * * * * , 0 10 * * 1
         console.log('monke do availability');
         try {
-       
-        //opAvailabilityId.send(client.command.get('autoAvailability').execute(client)); // handle errors 
-        //dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client)); // handle errors 
-        //opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client));
-        //dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client));
-        
+        opAvailabilityId.send(client.command.get('autoAvailability').execute(client, opAvailabilityId.id)); // handle errors 
+        dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id)); // handle errors 
+        biAvailabilityId.send(client.command.get('biAutoAvailability').execute(client, biAvailabilityId.id));//
+        opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement.id));
+        dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client, dtMatchAnnouncement.id));
+
         } catch (error) {
             console.log(error);
         }
@@ -54,9 +51,8 @@ client.once('ready', () => { // automatic commands
     })
 
     // Mixed friendly
-    schedule.scheduleJob('* * * * *', () => { //30 22 * * 1 - correct time for mxf
+    schedule.scheduleJob('30 22 * * 1', () => { //30 22 * * 1 - correct time for mxf
         console.log('monke do mxf');
-
         try {
             //mixedFriendlyAnnouncement.send(client.command.get('mixedFriendlyAnnouncement').execute(client));
         } catch (q) {
@@ -72,24 +68,22 @@ client.on('message', message => { // manual commands
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
+    const roleid = "804525131099406348";
 
     if (command === 'id'){
         message.channel.send(message.channel.id);
-    } else if (command === 'role') {
-        client.command.get('roleclaim').execute(message, client);
-        message.delete();
-    } else if (command === 'clear') {
-        client.command.get('clear').execute(message, args);
     } else if (command === 'slow') {
-        client.command.get('slowmode').execute(message, args);
-        message.delete();
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid)) { 
+            client.command.get('slowmode').execute(message, args);
+        }
     }
 })
 
-client.on('guildMemberAdd', member => {
-    console.log('user joined');
-    const channelID = member.guild.channels.cache.find(ch => ch.name === 'welcome');
-    client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
-})
+// Welcome message
+// client.on('guildMemberAdd', member => {
+//     console.log('user joined');
+//     const channelID = member.guild.channels.cache.find(ch => ch.name === 'welcome');
+//     client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
+// })
 
-client.login(process.env.token);
+client.login(process.env.token); //process.env.token
