@@ -68,7 +68,7 @@ client.on('message', message => { // manual commands
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
-    const roleid = "804525131099406348";
+    const roleid = "804193355046191115";
 
     if (command === 'id'){
         message.channel.send(message.channel.id);
