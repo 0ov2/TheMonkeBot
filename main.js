@@ -94,4 +94,4 @@ client.on('message', message => { // manual commands
 //     client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
 // })
 
-client.login('ODAzMDkzNjk4NjE4NzIwMjc3.YA4xSg.ucqiLZG12OXR-7mOCiuvoCbzGHc');
+client.login('');
