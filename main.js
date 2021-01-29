@@ -24,28 +24,29 @@ for (const file of commandFiles){
 
 client.once('ready', () => { // automatic commands
     console.log('monke');
-    console.log(botMembers);
 
     var opAvailabilityId = client.channels.cache.get("761305181827629076"); // 796857177796378654
-    var dtAvailabilityId = client.channels.cache.get("761305214677811210");
+    var dtAvailabilityId = client.channels.cache.get("761305214677811210"); //
     var opMatchAnnouncement = client.channels.cache.get("803397507182624778"); // 796857249921630238
-    var dtMatchAnnouncement = client.channels.cache.get("803432126836899901");
-    var mixedFriendlyAnnouncement = client.channels.cache.get("803417327210201108");
-    var roleClaim = client.channels.cache.get("803779865190203422");
+    var dtMatchAnnouncement = client.channels.cache.get("803432126836899901"); //
+    var biAvailabilityId = client.channels.cache.get("804500895865372722"); //
+    var mixedFriendlyAnnouncement = client.channels.cache.get("803417327210201108"); //
+    var roleClaim = client.channels.cache.get("803779865190203422"); //
 
     // role claim message
-    //roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
+    roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
 
     // Availability
-    schedule.scheduleJob('* * * * *', () => {  //0 10 * * 1 - correct time avail
+    schedule.scheduleJob('* * * * *', () => {  //* * * * * , 0 10 * * 1
         console.log('monke do availability');
         try {
        
-        //opAvailabilityId.send(client.command.get('autoAvailability').execute(client)); // handle errors 
-        //dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client)); // handle errors 
-        //opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client));
-        //dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client));
-        
+        opAvailabilityId.send(client.command.get('autoAvailability').execute(client)); // handle errors 
+        dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client)); // handle errors 
+        opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client));
+        dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client));
+        biAvailabilityId.send(client.command.get('biAutoAvailability').execute(client));//
+
         } catch (error) {
             console.log(error);
         }
@@ -86,10 +87,11 @@ client.on('message', message => { // manual commands
     }
 })
 
-client.on('guildMemberAdd', member => {
-    console.log('user joined');
-    const channelID = member.guild.channels.cache.find(ch => ch.name === 'welcome');
-    client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
-})
+// Welcome message
+// client.on('guildMemberAdd', member => {
+//     console.log('user joined');
+//     const channelID = member.guild.channels.cache.find(ch => ch.name === 'welcome');
+//     client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
+// })
 
-client.login(process.env.token);
+client.login('ODAzMDkzNjk4NjE4NzIwMjc3.YA4xSg.ucqiLZG12OXR-7mOCiuvoCbzGHc');

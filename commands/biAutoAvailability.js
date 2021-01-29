@@ -1,7 +1,7 @@
 module.exports = {
-    name: 'dtAutoAvailability',
+    name: 'biAutoAvailability',
     async execute(client){
-        await client.channels.cache.get("761305214677811210").send("<@&" + "803453407045746699" + ">\n" + 
+        await client.channels.cache.get("804500895865372722").send("<@&" + "804508751108243506" + ">\n" + 
         'A - Monday night 8pm ish \n' +
         'B - Tuesday night 8pm ish \n' +
         'C - Wednesday night 8pm ish \n' +
