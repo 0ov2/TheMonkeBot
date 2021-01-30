@@ -1,9 +1,12 @@
+var GetMatchTime = require("./getMatchTime");
+
 module.exports = {
     name: 'dtMatchAnnouncement',
     async execute(client, chanid){
-                                        //
-        await client.channels.cache.get(chanid).send("<@&" + "438518647003021315" + "> Sunday 3pm vs OP ").then(function (message){
-            message.react('🦧');
+        var matchTime = GetMatchTime(3);
+
+        await client.channels.cache.get(chanid).send("<@&" + "438518647003021315" + ">" + ` Sunday ${matchTime} vs OP`).then(async function (message){
+           await message.react('🦧');
         })
 
         client.on('messageReactionAdd', async (reaction, user) => {

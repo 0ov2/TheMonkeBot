@@ -6,7 +6,7 @@ const prefix = '-';
 
 const fs = require('fs');
 
-//const token = require("./token.js");
+var getChannelId = require("./commands/getChannelId");
 
 var schedule = require('node-schedule');
 
@@ -22,13 +22,14 @@ for (const file of commandFiles){
 
 client.once('ready', () => { // automatic commands
     console.log('monke');
-    const opAvailabilityId = client.channels.cache.find(ch => ch.name === 'op-availability');
-    const dtAvailabilityId = client.channels.cache.find(ch => ch.name === 'dt-availability');
-    const opMatchAnnouncement = client.channels.cache.find(ch => ch.name === 'op-match-announcements');
-    const dtMatchAnnouncement = client.channels.cache.find(ch => ch.name === 'dt-match-announcements');
-    const biAvailabilityId = client.channels.cache.find(ch => ch.name === 'bi-availability');
-    //const mixedFriendlyAnnouncement = client.channels.cache.find(ch => ch.name === 'op-availability');
-    //const roleClaim = client.channels.cache.find(ch => ch.name === 'op-availability');
+
+    var opAvailabilityId = getChannelId(client, 'op-availability');
+    var dtAvailabilityId = getChannelId(client, 'dt-availability');
+    var opMatchAnnouncement = getChannelId(client, 'op-match-announcements');
+    var dtMatchAnnouncement = getChannelId(client, 'dt-match-announcements');
+    var biAvailabilityId = getChannelId(client, 'bi-availability');
+    //var superpowersChan = getChannelId(client, 'superpowers');
+    //var roleClaim = getChannelId(client, '');
 
     // role claim message
     //roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
@@ -50,33 +51,46 @@ client.once('ready', () => { // automatic commands
         console.log('monke done. *monke noises*');
     })
 
-    // Mixed friendly
-    schedule.scheduleJob('30 22 * * 1', () => { //30 22 * * 1 - correct time for mxf
-        console.log('monke do mxf');
-        try {
-            //mixedFriendlyAnnouncement.send(client.command.get('mixedFriendlyAnnouncement').execute(client));
-        } catch (q) {
-            console.log(q);
-        } finally{
-            console.log('monke done. *monke noises* ');
-        }
-    })
+    // auto Mixed friendly
+    // schedule.scheduleJob('30 19 * * 0', () => { //30 19 * * 0 - real time
+    //     superpowersChan.send("-mxf");
+    // })
+    // schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
+    //     superpowersChan.send("-mxfdel");
+    // })
+
 })
 
 client.on('message', message => { // manual commands
-    if(!message.content.startsWith(prefix) || message.author.bot) return;
+
+    if(!message.content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
-    const roleid = "804193355046191115";
+
+    const myGuild = client.guilds.cache.get(message.guild.id);
+    const roleid = myGuild.roles.cache.find(role => role.name === 'superpowers');
 
     if (command === 'id'){
         message.channel.send(message.channel.id);
     } else if (command === 'slow') {
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid)) { 
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
             client.command.get('slowmode').execute(message, args);
         }
-    }
+    } else if (command === 'av') {
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
+            var opAvailabilityId = getChannelId(client, 'op-availability');
+            client.command.get('autoAvailability').execute(client, opAvailabilityId.id);
+        }
+    } //else if (command === 'mxf') {
+    //     if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
+    //         client.command.get('createmxfchannels').execute(client, message);
+    //     }
+    // } else if (command === 'mxfdel') {
+    //     if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
+    //         client.command.get('deletemxfchannels').execute(client, message);
+    //     }
+    // }
 })
 
 // Welcome message
@@ -86,4 +100,4 @@ client.on('message', message => { // manual commands
 //     client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
 // })
 
-client.login(process.env.token); //process.env.token
+client.login(process.env.token); //process.env.token  //require("./token.js")

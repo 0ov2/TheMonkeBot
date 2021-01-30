@@ -1,16 +1,21 @@
+var GetMatchTime = require("./getMatchTime");
+
 module.exports = {
     name: 'dtAutoAvailability',
-    async execute(client, chanid){              //                                  
+    async execute(client, chanid){   
+        var matchTimeEu = GetMatchTime(3);
+        var matchTimeNa = GetMatchTime(8); 
+        
         await client.channels.cache.get(chanid).send("<@&" + "438518647003021315" + ">\n" + 
-        'A - Monday night 8pm ish \n' +
-        'B - Tuesday night 8pm ish \n' +
-        'C - Wednesday night 8pm ish \n' +
-        'D - Thursday night 8pm ish \n' +
-        'E - Friday night 8pm ish \n' +
-        'F - Saturday afternoon 3pm \n' +
-        'G - Saturday night 8pm ish \n' +
-        'H - Sunday afternoon 3pm ish \n' +
-        'I - Sunday night 8pm ish').then(function (message){
+        `A - Monday night ${matchTimeNa} ish \n` +
+        `B - Tuesday night ${matchTimeNa} ish \n` +
+        `C - Wednesday night ${matchTimeNa} ish \n` +
+        `D - Thursday night ${matchTimeNa} ish \n` +
+        `E - Friday night ${matchTimeNa} ish \n` +
+        `F - Saturday afternoon ${matchTimeEu} ish \n` +
+        `G - Saturday night ${matchTimeNa} ish \n` +
+        `H - Sunday afternoon ${matchTimeEu} ish \n` +
+        `I - Sunday night ${matchTimeNa} ish`).then(function (message){
             message.react('🇦'),
             message.react('🇧'),
             message.react('🇨'),
