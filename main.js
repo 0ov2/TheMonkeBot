@@ -38,6 +38,7 @@ client.once('ready', () => { // automatic commands
     schedule.scheduleJob('0 10 * * 1', () => {  //* * * * * , 0 10 * * 1
         console.log('monke do availability');
         try {
+
         opAvailabilityId.send(client.command.get('autoAvailability').execute(client, opAvailabilityId.id)); // handle errors 
         dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id)); // handle errors 
         biAvailabilityId.send(client.command.get('biAutoAvailability').execute(client, biAvailabilityId.id));//
@@ -71,9 +72,7 @@ client.on('message', message => { // manual commands
     const myGuild = client.guilds.cache.get(message.guild.id);
     const roleid = myGuild.roles.cache.find(role => role.name === 'superpowers');
 
-    if (command === 'id'){
-        message.channel.send(message.channel.id);
-    } else if (command === 'slow') {
+    if (command === 'slow') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
             client.command.get('slowmode').execute(message, args);
         }
