@@ -21,10 +21,6 @@ module.exports = {
     if (!message.guild.channels.cache.find(cat=> cat.name == "mxf")) return; 
     const mxfChannel = message.guild.channels.cache.find(cat=> cat.name == "mxf");
     await mxfChannel.delete();
-
-    if (!message.guild.channels.cache.find(cat=> cat.name == "mxf-general")) return; 
-    const mxfGeneralChannel = message.guild.channels.cache.find(cat=> cat.name == "mxf-general");
-    await mxfGeneralChannel.delete();
     
     if (!message.guild.channels.cache.find(cat=> cat.name == "mxfchannels")) return;
     const catChannel = message.guild.channels.cache.find(cat=> cat.name == "mxfchannels");

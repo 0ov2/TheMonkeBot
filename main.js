@@ -112,4 +112,4 @@ client.on('message', message => { // manual commands
 //     client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
 // })
 
-client.login(process.env.token); //process.env.token  //require("./token.js")
+client.login(process.env.token); //process.env.token  //require("./token.js")     //require("./testToken.js")
