@@ -1,11 +1,16 @@
 module.exports = {
     name: 'createmxfchannels',
-    async execute(client, message) {
+    async execute(client, message, Discord) {
         await message.guild.channels.create('mxfchannels', {
             type: 'category',
         })
 
         let category = await message.guild.channels.cache.find(cat => cat.name === "mxfchannels");
+
+        await message.guild.channels.create('mxf-general', {
+            type: 'text',
+            parent: category,
+        })
 
         await message.guild.channels.create('mxf', {
             type: 'voice',
