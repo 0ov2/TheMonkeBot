@@ -29,20 +29,15 @@ client.once('ready', () => { // automatic commands
     var dtMatchAnnouncement = getChannelId(client, 'dt-match-announcements');
     var biAvailabilityId = getChannelId(client, 'bi-availability');
     var mxfChannel = getChannelId(client, 'mxf-general');
-    //var superpowersChan = getChannelId(client, 'superpowers');
-    //var roleClaim = getChannelId(client, '');
-
-    // role claim message
-    //roleClaim.send(client.command.get('roleclaim').execute(client, Discord));
 
     // Availability
     schedule.scheduleJob('0 10 * * 1', () => {  //* * * * * , 0 10 * * 1
         console.log('monke do availability');
         try {
 
-        opAvailabilityId.send(client.command.get('autoAvailability').execute(client, opAvailabilityId.id)); // handle errors 
-        dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id)); // handle errors 
-        biAvailabilityId.send(client.command.get('biAutoAvailability').execute(client, biAvailabilityId.id));//
+        opAvailabilityId.send(client.command.get('autoAvailability').execute(client, opAvailabilityId.id));
+        dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id)); 
+        biAvailabilityId.send(client.command.get('biAutoAvailability').execute(client, biAvailabilityId.id));
         opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement.id));
         dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client, dtMatchAnnouncement.id));
 
@@ -61,7 +56,7 @@ client.once('ready', () => { // automatic commands
         superpowersChan.send("-mxfdel");
     })
 
-    schedule.scheduleJob('0 10 * * 1', () => {
+    schedule.scheduleJob('0 10 * * 1', () => { //0 10 * * 1
         mxfChannel.send("-role");
     })
 })
@@ -75,6 +70,7 @@ client.on('message', message => { // manual commands
 
     const myGuild = client.guilds.cache.get(message.guild.id);
     const roleid = myGuild.roles.cache.find(role => role.name === 'superpowers');
+    const monkeRole = myGuild.roles.cache.find(role => role.name === 'MonkeBot');
 
     if (command === 'slow') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
@@ -84,22 +80,24 @@ client.on('message', message => { // manual commands
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
             var opAvailabilityId = getChannelId(client, 'op-availability');
             client.command.get('autoAvailability').execute(client, opAvailabilityId.id);
+            message.delete();
         }
     } else if (command === 'mxf') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
             client.command.get('createmxfchannels').execute(client, message, Discord);
-            
+            message.delete();
         }
     } else if (command === 'mxfdel') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
             client.command.get('deletemxfchannels').execute(client, message);
+            message.delete();
         }
     } else if (command === 'role') {
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) {
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) {
             const myGuild = client.guilds.cache.get(message.guild.id);
-            const mxfRole = myGuild.roles.cache.find(role => role.name === 'MXF');
-            var mxfGeneralId = getChannelId(client, 'mxf-general');
-            mxfGeneralId.send(client.command.get('mixedFriendlyAnnouncement').execute(client, Discord, mxfRole));
+            const mxfRole = myGuild.roles.cache.find(role => role.name === 'MXF'); //
+            var mxfGeneralId = getChannelId(client, 'mxf-general'); //
+            mxfGeneralId.send(client.command.get('mixedFriendlyAnnouncement').execute(client, Discord, mxfGeneralId, mxfRole));
             message.delete();
         }
     }

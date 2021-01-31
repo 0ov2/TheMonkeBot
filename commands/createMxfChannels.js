@@ -1,6 +1,6 @@
 module.exports = {
     name: 'createmxfchannels',
-    async execute(client, message, Discord) {
+    async execute(message) {
         await message.guild.channels.create('mxfchannels', {
             type: 'category',
         })

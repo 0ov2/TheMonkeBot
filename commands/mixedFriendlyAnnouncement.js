@@ -1,6 +1,3 @@
-var getChannelId = require("./getChannelId.js");
-
-
 var today = new Date();
 today.setDate(today.getDate() + 7);
 var dd = String(today.getDay() + 7);
@@ -10,14 +7,13 @@ var newDate = dd + '.' + mm + '.' + yy;
 
 module.exports = {
     name: 'mixedFriendlyAnnouncement',
-    async execute(client, Discord, roleId){
-        var mxfChan = getChannelId(client, 'mxf-general')
-
+    async execute(client, Discord, mxfChan, mxfRole){
+        
         // role claim
         let embed = new Discord.MessageEmbed()
         .setTitle('React to get pinged!')
         .setColor("ORANGE")
-        .setDescription('🦧 - MXF')
+        .setDescription('🦧 - MXF') //
        
         await client.channels.cache.get(mxfChan.id).send(embed).then(function (message){
             message.react('🦧');
@@ -26,12 +22,13 @@ module.exports = {
         client.on('messageReactionAdd', async (reaction, user) => {
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
-            if (user.bot) return;
             if (!reaction.message.guild) return;
         
             if (reaction.message.channel.id == mxfChan.id) {
                 if (reaction.emoji.name === '🦧'){
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(roleId.id);
+                    await reaction.message.guild.members.cache.get(user.id).roles.add(mxfChan);
+                }else {
+                    reaction.remove();
                 }
             }
         });
@@ -39,19 +36,18 @@ module.exports = {
         client.on('messageReactionRemove', async (reaction, user) => {
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
-            if (user.bot) return;
             if (!reaction.message.guild) return;
-            if (reaction.message.channel.id == mxfChan.id) {
+            if (reaction.message.channel.id == mxfChan) {
                 if (reaction.emoji.name === '🦧'){
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(roleId.id);
+                    await reaction.message.guild.members.cache.get(user.id).roles.remove(mxfChan);
                 }
             }
         });
 
         if (!mxfChan) return;
 
-        await client.channels.cache.get(mxfChan.id).send("<@&" + "803449090300968971" + "> Saturday " + newDate + ' - 19 UTC / 20 CEST / 14 EST.' + '\n' + 'React with a single unique emoji!' + '\n' + 'GROUP A')
+        await client.channels.cache.get(mxfChan.id).send("<@&" + mxfRole.id + "> Saturday " + newDate + ' - 20 UTC / 21 CEST / 15 EST.' + '\n' + 'React with a single unique emoji!' + '\n' + 'GROUP A')
 
-        await client.channels.cache.get(mxfChan.id).send("<@&" + "803449090300968971" + "> Saturday " + newDate + ' - 19 UTC / 20 CEST / 14 EST.' + '\n' + 'React with a single unique emoji!' + '\n' + 'GROUP B');
+        await client.channels.cache.get(mxfChan.id).send("<@&" + mxfRole.id + "> Saturday " + newDate + ' - 20 UTC / 21 CEST / 15 EST.' + '\n' + 'React with a single unique emoji!' + '\n' + 'GROUP B');
     }
 }
