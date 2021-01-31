@@ -26,7 +26,7 @@ module.exports = {
         
             if (reaction.message.channel.id == mxfChan.id) {
                 if (reaction.emoji.name === '🦧'){
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(mxfChan.id);
+                    await reaction.message.guild.members.cache.get(user.id).roles.add(mxfRole.id);
                 }else {
                     reaction.remove();
                 }
@@ -39,7 +39,7 @@ module.exports = {
             if (!reaction.message.guild) return;
             if (reaction.message.channel.id == mxfChan.id) {
                 if (reaction.emoji.name === '🦧'){
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(mxfChan.id);
+                    await reaction.message.guild.members.cache.get(user.id).roles.remove(mxfRole.id);
                 }
             }
         });
