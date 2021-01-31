@@ -28,6 +28,7 @@ client.once('ready', () => { // automatic commands
     var opMatchAnnouncement = getChannelId(client, 'op-match-announcements');
     var dtMatchAnnouncement = getChannelId(client, 'dt-match-announcements');
     var biAvailabilityId = getChannelId(client, 'bi-availability');
+    var mxfChannel = getChannelId(client, 'mxf-general');
     //var superpowersChan = getChannelId(client, 'superpowers');
     //var roleClaim = getChannelId(client, '');
 
@@ -53,13 +54,16 @@ client.once('ready', () => { // automatic commands
     })
 
     // auto Mixed friendly
-    // schedule.scheduleJob('30 19 * * 0', () => { //30 19 * * 0 - real time
-    //     superpowersChan.send("-mxf");
-    // })
-    // schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
-    //     superpowersChan.send("-mxfdel");
-    // })
+    schedule.scheduleJob('30 19 * * 0', () => { //30 19 * * 0 - real time
+        superpowersChan.send("-mxf");
+    })
+    schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
+        superpowersChan.send("-mxfdel");
+    })
 
+    schedule.scheduleJob('0 10 * * 1', () => {
+        mxfChannel.send("-role");
+    })
 })
 
 client.on('message', message => { // manual commands
@@ -81,15 +85,24 @@ client.on('message', message => { // manual commands
             var opAvailabilityId = getChannelId(client, 'op-availability');
             client.command.get('autoAvailability').execute(client, opAvailabilityId.id);
         }
-    } //else if (command === 'mxf') {
-    //     if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
-    //         client.command.get('createmxfchannels').execute(client, message);
-    //     }
-    // } else if (command === 'mxfdel') {
-    //     if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
-    //         client.command.get('deletemxfchannels').execute(client, message);
-    //     }
-    // }
+    } else if (command === 'mxf') {
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
+            client.command.get('createmxfchannels').execute(client, message, Discord);
+            
+        }
+    } else if (command === 'mxfdel') {
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
+            client.command.get('deletemxfchannels').execute(client, message);
+        }
+    } else if (command === 'role') {
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) {
+            const myGuild = client.guilds.cache.get(message.guild.id);
+            const mxfRole = myGuild.roles.cache.find(role => role.name === 'MXF');
+            var mxfGeneralId = getChannelId(client, 'mxf-general');
+            mxfGeneralId.send(client.command.get('mixedFriendlyAnnouncement').execute(client, Discord, mxfRole));
+            message.delete();
+        }
+    }
 })
 
 // Welcome message
@@ -99,4 +112,4 @@ client.on('message', message => { // manual commands
 //     client.command.get('welcomeMessage').execute(channelID, client, member, Discord);
 // })
 
-client.login(process.env.token); //process.env.token  //require("./token.js")
+client.login(require(process.env.token)); //process.env.token  //require("./token.js")
