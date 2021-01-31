@@ -83,12 +83,12 @@ client.on('message', message => { // manual commands
             message.delete();
         }
     } else if (command === 'mxf') {
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
-            client.command.get('createmxfchannels').execute(client, message, Discord);
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
+            client.command.get('createmxfchannels').execute(message, client, Discord);
             message.delete();
         }
     } else if (command === 'mxfdel') {
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
             client.command.get('deletemxfchannels').execute(client, message);
             message.delete();
         }
