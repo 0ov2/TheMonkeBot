@@ -55,7 +55,6 @@ client.once('ready', () => { // automatic commands
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         superpowersChan.send("-mxfdel");
     })
-
     schedule.scheduleJob('0 10 * * 1', () => { //0 10 * * 1
         mxfChannel.send("-role");
     })
@@ -78,8 +77,22 @@ client.on('message', message => { // manual commands
         }
     } else if (command === 'av') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
+
             var opAvailabilityId = getChannelId(client, 'op-availability');
-            client.command.get('autoAvailability').execute(client, opAvailabilityId.id);
+            var dtAvailabilityId = getChannelId(client, 'dt-availability');
+            var biAvailabilityId = getChannelId(client, 'bi-availability');
+
+            if (message.channel.id === opAvailabilityId.id) {
+                client.command.get('autoAvailability').execute(client, opAvailabilityId.id);
+            }else if (message.channel.id === dtAvailabilityId.id) {
+                client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id);
+            }else if (message.channel.id === biAvailabilityId.id) {
+                client.command.get('biAutoAvailability').execute(client, biAvailabilityId.id);
+            }else {
+                message.delete();
+                return;
+            }
+            
             message.delete();
         }
     } else if (command === 'mxf') {
