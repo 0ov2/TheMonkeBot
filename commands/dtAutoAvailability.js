@@ -15,16 +15,16 @@ module.exports = {
         `F - Saturday afternoon ${matchTimeEu} ish \n` +
         `G - Saturday night ${matchTimeNa} ish \n` +
         `H - Sunday afternoon ${matchTimeEu} ish \n` +
-        `I - Sunday night ${matchTimeNa} ish`).then(function (message){
-            message.react('🇦'),
-            message.react('🇧'),
-            message.react('🇨'),
-            message.react('🇩'),
-            message.react('🇪'),
-            message.react('🇫'),
-            message.react('🇬'),
-            message.react('🇭'),
-            message.react('🇮');
+        `I - Sunday night ${matchTimeNa} ish`).then(async function (message){
+            await message.react('🇦'),
+            await message.react('🇧'),
+            await message.react('🇨'),
+            await message.react('🇩'),
+            await message.react('🇪'),
+            await message.react('🇫'),
+            await message.react('🇬'),
+            await message.react('🇭'),
+            await message.react('🇮');
         })
 
         client.on('messageReactionAdd', async (reaction, user) => {
@@ -37,15 +37,15 @@ module.exports = {
             if (reaction.partial) await reaction.fetch();
 
             console.log(reaction.message.id);
-            var countA = reaction.message.reactions.cache.get('🇦').count;
-            var countB = reaction.message.reactions.cache.get('🇧').count;
-            var countC = reaction.message.reactions.cache.get('🇨').count;
-            var countD = reaction.message.reactions.cache.get('🇩').count;
-            var countE = reaction.message.reactions.cache.get('🇪').count;
-            var countF = reaction.message.reactions.cache.get('🇫').count;
-            var countG = reaction.message.reactions.cache.get('🇬').count;
-            var countH = reaction.message.reactions.cache.get('🇭').count;
-            var countI = reaction.message.reactions.cache.get('🇮').count;
+            var countA = await reaction.message.reactions.cache.get('🇦').count;
+            var countB = await reaction.message.reactions.cache.get('🇧').count;
+            var countC = await reaction.message.reactions.cache.get('🇨').count;
+            var countD = await reaction.message.reactions.cache.get('🇩').count;
+            var countE = await reaction.message.reactions.cache.get('🇪').count;
+            var countF = await reaction.message.reactions.cache.get('🇫').count;
+            var countG = await reaction.message.reactions.cache.get('🇬').count;
+            var countH = await reaction.message.reactions.cache.get('🇭').count;
+            var countI = await reaction.message.reactions.cache.get('🇮').count;
 
             
             if (countA > 2) {
