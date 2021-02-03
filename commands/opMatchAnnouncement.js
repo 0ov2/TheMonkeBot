@@ -1,7 +1,7 @@
 module.exports = {
     name: 'opMatchAnnouncement',
     async execute(client, chanid){                                                 
-        await client.channels.cache.get(chanid).send("<@&" + "796855448678563890" + "> Sunday 19 UTC vs DT ").then(function (message){
+        await client.channels.cache.get(chanid).send("<@&" + "796855448678563890" + "> Sunday 20 UTC vs DT ").then(function (message){
             message.react('🦧');
         })
 
