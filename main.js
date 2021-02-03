@@ -64,10 +64,10 @@ client.once('ready', () => { // automatic commands
     })
 
     // auto Mixed friendly
-    schedule.scheduleJob('30 19 * * 6', () => { //30 19 * * 6 - real time
+    schedule.scheduleJob('30 20 * * 6', () => { //30 19 * * 6 - real time
         superpowersChan.send("-dtf");
     })
-    schedule.scheduleJob('0 23 * * 6', () => { //0 23 * * 6
+    schedule.scheduleJob('0 0 * * 0', () => { //0 23 * * 6
         superpowersChan.send("-dtfdel");
     })
     schedule.scheduleJob('0 18 * * 0', () => { //0 18 * * 0
