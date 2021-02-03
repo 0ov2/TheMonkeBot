@@ -2,9 +2,9 @@ const spacetime = require('spacetime');
 const getTime = require('./getMatchTime');
 
 var d = spacetime.now('Europe/London');
-var s = d.add(7, 'day');
-var time = getTime(3);
-var newDate = `${s.dayName()} ${s.format('month')} ${s.format('{date-pad}')} at 20 UTC / ${time} EST`;
+var s = d.add(6, 'day');
+var time = getTime(4);
+var newDate = `${s.dayName()} ${s.format('month')} ${s.format('{date-pad}')} at 21 UTC / ${time} EST`;
 
 const getRole = require('./getRole');
 const getChan = require('./getChannelId');

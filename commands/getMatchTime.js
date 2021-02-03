@@ -16,6 +16,12 @@ function GetMatchTime(time) {
         } else {
             return matchTime = "9pm";
         }
+    } else if (time == 4) {
+        if (!s.isDST()) {
+            return matchTime = "4pm";
+        } else {
+            return matchTime = "5pm";
+        }
     }
 }
 

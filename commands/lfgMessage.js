@@ -14,11 +14,11 @@ module.exports = {
         let embed = new Discord.MessageEmbed()
         .setTitle('React to the role you want!')
         .setColor("ORANGE")
-        .setDescription('🐶 - Pavlov \n' + '🍿 - Population One') 
+        .setDescription('🍆 - Pavlov \n' + '💦 - Population One') 
        
         await client.channels.cache.get(lfgChan.id).send(embed).then(async function (message){
-            await message.react('🐶');
-            await message.react('🍿');
+            await message.react('🍆');
+            await message.react('💦');
         })
 
         client.on('messageReactionAdd', async (reaction, user) => {
@@ -27,9 +27,9 @@ module.exports = {
             if (!reaction.message.guild) return;
         
             if (reaction.message.channel.id == lfgChan.id) {
-                if (reaction.emoji.name === '🐶'){
+                if (reaction.emoji.name === '🍆'){
                     await reaction.message.guild.members.cache.get(user.id).roles.add(pavlovRole.id);
-                }else if (reaction.emoji.name === '🍿') {
+                }else if (reaction.emoji.name === '💦') {
                     await reaction.message.guild.members.cache.get(user.id).roles.add(pop1Role.id);
                 }else {
                     await reaction.remove();
@@ -42,9 +42,9 @@ module.exports = {
             if (reaction.partial) await reaction.fetch();
             if (!reaction.message.guild) return;
             if (reaction.message.channel.id == lfgChan.id) {
-                if (reaction.emoji.name === '🐶'){
+                if (reaction.emoji.name === '🍆'){
                     await reaction.message.guild.members.cache.get(user.id).roles.remove(pavlovRole.id);
-                } else if (reaction.emoji.name === '🍿') {
+                } else if (reaction.emoji.name === '💦') {
                     await reaction.message.guild.members.cache.get(user.id).roles.remove(pop1Role.id);
                 }
             }
