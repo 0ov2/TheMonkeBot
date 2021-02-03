@@ -2,7 +2,7 @@ module.exports = {
     name: 'biAutoAvailability',
     async execute(client, chanid){    
         await client.channels.cache.get(chanid).send("<@&" + "804170403562913812" + ">\n" + 
-        'Tuesday').then(async function (message){
+        'Monday').then(async function (message){
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
@@ -28,6 +28,36 @@ module.exports = {
                 } else if (countC > 2) {
                     await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
                 } 
+            })
+        })
+
+        await client.channels.cache.get(chanid).send( 
+        'Tuesday').then(async function (message){
+            await message.react('8️⃣'),
+            await message.react('9️⃣'),
+            await message.react('🔟');
+
+            client.on('messageReactionAdd', async (reaction, user) => {
+
+                if (reaction.message.partial) await reaction.message.fetch();
+                if (reaction.partial) await reaction.fetch();
+                if (user.bot) return;
+    
+                if (reaction.message.partial) await reaction.message.fetch();
+                if (reaction.partial) await reaction.fetch();
+    
+                var countA = await reaction.message.reactions.cache.get('8️⃣').count;
+                var countB = await reaction.message.reactions.cache.get('9️⃣').count;
+                var countC = await reaction.message.reactions.cache.get('🔟').count;
+    
+                
+                if (countA > 2) {
+                    await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
+                } else if (countB > 2) {
+                    await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
+                } else if (countC > 2) {
+                    await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
+                }
             })
         })
 
