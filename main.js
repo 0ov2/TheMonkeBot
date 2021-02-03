@@ -108,14 +108,14 @@ client.on('message', message => { // manual commands
             
             message.delete();
         }
-    } else if (command === 'mxf') {
+    } else if (command === 'dtf') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.author.bot){
-            client.command.get('createmxfchannels').execute(message, client, Discord);
+            client.command.get('createmxfchannels').execute(message);
             message.delete();
         }
-    } else if (command === 'mxfdel') {
+    } else if (command === 'dtfdel') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.author.bot){
-            client.command.get('deletemxfchannels').execute(client, message);
+            client.command.get('deletemxfchannels').execute(message);
             message.delete();
         }
     } else if (command === 'lfg') {

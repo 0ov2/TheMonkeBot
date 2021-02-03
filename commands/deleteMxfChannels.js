@@ -1,29 +1,39 @@
 module.exports = {
     name: 'deletemxfchannels',
-    async execute(client, message) {
+    async execute(message) {
 
-    if(!message.guild.channels.cache.find(cat=> cat.name == "🟦GROUP A BLUE")) return;
-    const groupABlueChannel = message.guild.channels.cache.find(cat=> cat.name == "🟦GROUP A BLUE");
-    await groupABlueChannel.delete();
+    //EU
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟦 🇪 🇺 GROUP A BLUE")) return;
+    const euGroupABlueChannel = message.guild.channels.cache.find(cat=> cat.name == "🟦 🇪 🇺 GROUP A BLUE");
+    await euGroupABlueChannel.delete();
 
-    if(!message.guild.channels.cache.find(cat=> cat.name == "🟥GROUP A RED")) return;
-    const groupARedChannel = message.guild.channels.cache.find(cat=> cat.name == "🟥GROUP A RED");
-    await groupARedChannel.delete();
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟥 🇪 🇺 GROUP A RED")) return;
+    const euGroupARedChannel = message.guild.channels.cache.find(cat=> cat.name == "🟥 🇪 🇺 GROUP A RED");
+    await euGroupARedChannel.delete();
 
-    if(!message.guild.channels.cache.find(cat=> cat.name == "🟦GROUP B BLUE")) return;
-    const groupBBlueChannel = message.guild.channels.cache.find(cat=> cat.name == "🟦GROUP B BLUE");
-    await groupBBlueChannel.delete();
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟦 🇪 🇺 GROUP B BLUE")) return;
+    const euGroupBBlueChannel = message.guild.channels.cache.find(cat=> cat.name == "🟦 🇪 🇺 GROUP B BLUE");
+    await euGroupBBlueChannel.delete();
 
-    if(!message.guild.channels.cache.find(cat=> cat.name == "🟥GROUP B RED")) return;
-    const groupBRedChannel = message.guild.channels.cache.find(cat=> cat.name == "🟥GROUP B RED");
-    await groupBRedChannel.delete();
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟥 🇪 🇺 GROUP B RED")) return;
+    const euGroupBRedChannel = message.guild.channels.cache.find(cat=> cat.name == "🟥 🇪 🇺 GROUP B RED");
+    await euGroupBRedChannel.delete();
 
-    if (!message.guild.channels.cache.find(cat=> cat.name == "mxf")) return; 
-    const mxfChannel = message.guild.channels.cache.find(cat=> cat.name == "mxf");
-    await mxfChannel.delete();
-    
-    if (!message.guild.channels.cache.find(cat=> cat.name == "mxfchannels")) return;
-    const catChannel = message.guild.channels.cache.find(cat=> cat.name == "mxfchannels");
-    await catChannel.delete();
+    //NA
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟦 🇳 🇦 GROUP A BLUE")) return;
+    const naGroupABlueChannel = message.guild.channels.cache.find(cat=> cat.name == "🟦 🇳 🇦 GROUP A BLUE");
+    await naGroupABlueChannel.delete();
+
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟥 🇳 🇦 GROUP A RED")) return;
+    const naGroupARedChannel = message.guild.channels.cache.find(cat=> cat.name == "🟥 🇳 🇦 GROUP A RED");
+    await naGroupARedChannel.delete();
+
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟦 🇳 🇦 GROUP B BLUE")) return;
+    const naGroupBBlueChannel = message.guild.channels.cache.find(cat=> cat.name == "🟦 🇳 🇦 GROUP B BLUE");
+    await naGroupBBlueChannel.delete();
+
+    if(!message.guild.channels.cache.find(cat=> cat.name == "🟥 🇳 🇦 GROUP B RED")) return;
+    const naGroupBRedChannel = message.guild.channels.cache.find(cat=> cat.name == "🟥 🇳 🇦 GROUP B RED");
+    await naGroupBRedChannel.delete();
     }
 }
