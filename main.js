@@ -84,6 +84,7 @@ client.on('message', message => { // manual commands
     const command = args.shift().toLowerCase();
 
     const roleid = getRole(client, 'superpowers', message);
+    const monkeRole = getRole(client, 'Monke', message);
 
     if (command === 'slow') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
@@ -125,7 +126,7 @@ client.on('message', message => { // manual commands
             message.delete();
         }
     }else if (command === 'role') {
-        if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) {
+        if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
             client.command.get('mixedFriendlyAnnouncement').execute(client, Discord, message);
             message.delete();
         }
