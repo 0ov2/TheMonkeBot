@@ -4,7 +4,7 @@ const getTime = require('./getMatchTime');
 var d = spacetime.now('Europe/London');
 var s = d.add(2, 'day');
 var time = getTime(4);
-var newDate = `Saturday ${s.format('{date-pad}')} ${s.format('month')} at 21 UTC / ${time} EST`;
+var newDate = ` Saturday ${s.format('{date-pad}')} ${s.format('month')} at 21 UTC / ${time} EST`;
 
 const getRole = require('./getRole');
 const getChan = require('./getChannelId');
