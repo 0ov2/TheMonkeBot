@@ -5,43 +5,43 @@ module.exports = {
         let category = await message.guild.channels.cache.find(cat => cat.name === "DTF");
 
         //EU
-        await message.guild.channels.create('🟦 🇪 🇺 GROUP A BLUE', {
+        await message.guild.channels.create('🟦 🇪 🇺 BLUE', {
             type: 'voice',
             parent: category,
         })
 
-        await message.guild.channels.create('🟥 🇪 🇺 GROUP A RED', {
+        await message.guild.channels.create('🟥 🇪 🇺 RED', {
             type: 'voice',
             parent: category,
         })
 
-        await message.guild.channels.create('🟦 🇪 🇺 GROUP B BLUE', {
+        await message.guild.channels.create('🟦 🇪 🇺 BLUE', {
             type: 'voice',
             parent: category,
         })
 
-        await message.guild.channels.create('🟥 🇪 🇺 GROUP B RED', {
+        await message.guild.channels.create('🟥 🇪 🇺 RED', {
             type: 'voice',
             parent: category,
         })
 
         //NA
-        await message.guild.channels.create('🟦 🇳 🇦 GROUP A BLUE', {
+        await message.guild.channels.create('🟦 🇳 🇦 BLUE', {
             type: 'voice',
             parent: category,
         })
 
-        await message.guild.channels.create('🟥 🇳 🇦 GROUP A RED', {
+        await message.guild.channels.create('🟥 🇳 🇦 RED', {
             type: 'voice',
             parent: category,
         })
 
-        await message.guild.channels.create('🟦 🇳 🇦 GROUP B BLUE', {
+        await message.guild.channels.create('🟦 🇳 🇦 BLUE', {
             type: 'voice',
             parent: category,
         })
 
-        await message.guild.channels.create('🟥 🇳 🇦 GROUP B RED', {
+        await message.guild.channels.create('🟥 🇳 🇦 RED', {
             type: 'voice',
             parent: category,
         })
