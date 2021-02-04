@@ -31,6 +31,7 @@ client.once('ready', () => { // automatic commands
     var dtMatchAnnouncement = getChannelId(client, 'dt-match-announcements');
     var biAvailabilityId = getChannelId(client, 'bi-availability');
     var mxfChannel = getChannelId(client, 'dream-teams-friendly');
+    var monkeChan = getChannelId(client, 'monke-bot');
 
     // Availability
     // EU
@@ -65,13 +66,13 @@ client.once('ready', () => { // automatic commands
 
     // auto Mixed friendly
     schedule.scheduleJob('0 19 * * 6', () => { //30 19 * * 6 - real time
-        superpowersChan.send("-dtf");
+        monkeChan.send("-dtf");
     })
     schedule.scheduleJob('0 0 * * 0', () => { //0 23 * * 6
-        superpowersChan.send("-dtfdel");
+        monkeChan.send("-dtfdel");
     })
     schedule.scheduleJob('30 18 * * 0', () => { //0 18 * * 0
-        mxfChannel.send("-role");
+        monkeChan.send("-role");
     })
 })
 
