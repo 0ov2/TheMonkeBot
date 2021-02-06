@@ -1,10 +1,11 @@
 var GetMatchTime = require("./getMatchTime");
-
+var getChannel = require('./getChannelId');
 module.exports = {
     name: 'dtAutoAvailability',
     async execute(client, chanid){   
         var matchTimeEu = GetMatchTime(3);
         var matchTimeNa = GetMatchTime(8); 
+        var chanId = getChannel(client, 'dt-availability');
         
         await client.channels.cache.get(chanid).send("<@&" + "438518647003021315" + ">\n" + 
         `A - Monday night ${matchTimeNa} ish \n` +
@@ -35,37 +36,38 @@ module.exports = {
 
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
+            if (reaction.message.channel.id === chanId.id) {
+                var countA = await reaction.message.reactions.cache.get('🇦').count;
+                var countB = await reaction.message.reactions.cache.get('🇧').count;
+                var countC = await reaction.message.reactions.cache.get('🇨').count;
+                var countD = await reaction.message.reactions.cache.get('🇩').count;
+                var countE = await reaction.message.reactions.cache.get('🇪').count;
+                var countF = await reaction.message.reactions.cache.get('🇫').count;
+                var countG = await reaction.message.reactions.cache.get('🇬').count;
+                var countH = await reaction.message.reactions.cache.get('🇭').count;
+                var countI = await reaction.message.reactions.cache.get('🇮').count;
 
-            console.log(reaction.message.id);
-            var countA = await reaction.message.reactions.cache.get('🇦').count;
-            var countB = await reaction.message.reactions.cache.get('🇧').count;
-            var countC = await reaction.message.reactions.cache.get('🇨').count;
-            var countD = await reaction.message.reactions.cache.get('🇩').count;
-            var countE = await reaction.message.reactions.cache.get('🇪').count;
-            var countF = await reaction.message.reactions.cache.get('🇫').count;
-            var countG = await reaction.message.reactions.cache.get('🇬').count;
-            var countH = await reaction.message.reactions.cache.get('🇭').count;
-            var countI = await reaction.message.reactions.cache.get('🇮').count;
-
-            
-            if (countA > 2) {
-                await reaction.message.reactions.resolve('🇦').users.remove(user.bot.id);
-            } else if (countB > 2) {
-                await reaction.message.reactions.resolve('🇧').users.remove(user.bot.id);
-            } else if (countC > 2) {
-                await reaction.message.reactions.resolve('🇨').users.remove(user.bot.id);
-            } else if (countD > 2) {
-                await reaction.message.reactions.resolve('🇩').users.remove(user.bot.id);
-            } else if (countE > 2) {
-                await reaction.message.reactions.resolve('🇪').users.remove(user.bot.id);
-            } else if (countF > 2) {
-                await reaction.message.reactions.resolve('🇫').users.remove(user.bot.id);
-            } else if (countG > 2) {
-                await reaction.message.reactions.resolve('🇬').users.remove(user.bot.id);
-            } else if (countH > 2) {
-                await reaction.message.reactions.resolve('🇭').users.remove(user.bot.id);
-            } else if (countI > 2) {
-                await reaction.message.reactions.resolve('🇮').users.remove(user.bot.id);
+                if (countA > 2) {
+                    await reaction.message.reactions.resolve('🇦').users.remove(user.bot.id);
+                } else if (countB > 2) {
+                    await reaction.message.reactions.resolve('🇧').users.remove(user.bot.id);
+                } else if (countC > 2) {
+                    await reaction.message.reactions.resolve('🇨').users.remove(user.bot.id);
+                } else if (countD > 2) {
+                    await reaction.message.reactions.resolve('🇩').users.remove(user.bot.id);
+                } else if (countE > 2) {
+                    await reaction.message.reactions.resolve('🇪').users.remove(user.bot.id);
+                } else if (countF > 2) {
+                    await reaction.message.reactions.resolve('🇫').users.remove(user.bot.id);
+                } else if (countG > 2) {
+                    await reaction.message.reactions.resolve('🇬').users.remove(user.bot.id);
+                } else if (countH > 2) {
+                    await reaction.message.reactions.resolve('🇭').users.remove(user.bot.id);
+                } else if (countI > 2) {
+                    await reaction.message.reactions.resolve('🇮').users.remove(user.bot.id);
+                }
+            } else {
+                return;
             }
         })
     }

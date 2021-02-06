@@ -1,24 +1,31 @@
+var GetMatchTime = require("./getMatchTime");
 var getChannel = require('./getChannelId');
-
 module.exports = {
-    name: 'autoAvailability',
-    async execute(client, ChanID){
-        var chanId = getChannel(client, 'op-availability');
-        await client.channels.cache.get(ChanID).send("<@&" + "796855448678563890" + ">\n" + //
-        'A - Monday 19 UTC \n' +
-        'B - Tuesday 19 UTC \n' +
-        'C - Wednesday 19 UTC \n' +
-        'D - Thursday 19 UTC \n' +
-        'E - Friday 19 UTC \n' +
-        'F - Saturday 19 UTC \n' +
-        'G - Sunday 19 UTC').then(async function (message){
+    name: 'tempBiAutoAvailability',
+    async execute(client, chanid){   
+        var matchTimeEu = GetMatchTime(3);
+        var matchTimeNa = GetMatchTime(8); 
+        var chanId = getChannel(client, 'bi-availability');
+        
+        await client.channels.cache.get(chanid).send("<@&" + "804170403562913812" + ">\n" + 
+        `A - Monday night ${matchTimeNa} ish \n` +
+        `B - Tuesday night ${matchTimeNa} ish \n` +
+        `C - Wednesday night ${matchTimeNa} ish \n` +
+        `D - Thursday night ${matchTimeNa} ish \n` +
+        `E - Friday night ${matchTimeNa} ish \n` +
+        `F - Saturday afternoon ${matchTimeEu} ish \n` +
+        `G - Saturday night ${matchTimeNa} ish \n` +
+        `H - Sunday afternoon ${matchTimeEu} ish \n` +
+        `I - Sunday night ${matchTimeNa} ish`).then(async function (message){
             await message.react('🇦'),
             await message.react('🇧'),
             await message.react('🇨'),
             await message.react('🇩'),
             await message.react('🇪'),
             await message.react('🇫'),
-            await message.react('🇬');
+            await message.react('🇬'),
+            await message.react('🇭'),
+            await message.react('🇮');
         })
 
         client.on('messageReactionAdd', async (reaction, user) => {
@@ -37,7 +44,9 @@ module.exports = {
                 var countE = await reaction.message.reactions.cache.get('🇪').count;
                 var countF = await reaction.message.reactions.cache.get('🇫').count;
                 var countG = await reaction.message.reactions.cache.get('🇬').count;
-    
+                var countH = await reaction.message.reactions.cache.get('🇭').count;
+                var countI = await reaction.message.reactions.cache.get('🇮').count;
+
                 if (countA > 2) {
                     await reaction.message.reactions.resolve('🇦').users.remove(user.bot.id);
                 } else if (countB > 2) {
@@ -52,6 +61,10 @@ module.exports = {
                     await reaction.message.reactions.resolve('🇫').users.remove(user.bot.id);
                 } else if (countG > 2) {
                     await reaction.message.reactions.resolve('🇬').users.remove(user.bot.id);
+                } else if (countH > 2) {
+                    await reaction.message.reactions.resolve('🇭').users.remove(user.bot.id);
+                } else if (countI > 2) {
+                    await reaction.message.reactions.resolve('🇮').users.remove(user.bot.id);
                 }
             } else {
                 return;
@@ -59,4 +72,3 @@ module.exports = {
         })
     }
 }
-

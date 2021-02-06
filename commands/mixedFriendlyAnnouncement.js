@@ -1,13 +1,6 @@
-const spacetime = require('spacetime');
-const getTime = require('./getMatchTime');
-
-var d = spacetime.now('Europe/London');
-var s = d.add(2, 'day');
-var time = getTime(4);
-var newDate = ` Saturday ${s.format('{date-pad}')} ${s.format('month')} at 21 UTC / ${time} EST`;
-
 const getRole = require('./getRole');
 const getChan = require('./getChannelId');
+const fs = require('fs');
 
 module.exports = {
     name: 'mixedFriendlyAnnouncement',
@@ -22,15 +15,18 @@ module.exports = {
         .setColor("ORANGE")
         .setDescription('🦧 - Dream Team Friendly') //
        
-        await client.channels.cache.get(dftChan.id).send(embed).then(async function (message){
+        client.channels.cache.get(dftChan.id).send(embed).then(async function (message){
             await message.react('🦧');
+
+            var options = {encoding: 'utf-8', flag: 'w'};
+            fs.writeFileSync('./roleClaimMessage.txt', message.id, options);
 
             client.on('messageReactionAdd', async (reaction, user) => {
                 if (reaction.message.partial) await reaction.message.fetch();
                 if (reaction.partial) await reaction.fetch();
                 if (!reaction.message.guild) return;
             
-                if (reaction.message.channel.id == dftChan.id) {
+                if (reaction.message.channel.id == dftChan.id && reaction.message.id == message.id) {
                     if (reaction.emoji.name === '🦧'){
                         await reaction.message.guild.members.cache.get(user.id).roles.add(dtfRole.id);
                     }
@@ -41,19 +37,12 @@ module.exports = {
                 if (reaction.message.partial) await reaction.message.fetch();
                 if (reaction.partial) await reaction.fetch();
                 if (!reaction.message.guild) return;
-                if (reaction.message.channel.id == dftChan.id) {
+                if (reaction.message.channel.id == dftChan.id && reaction.message.id == message.id) {
                     if (reaction.emoji.name === '🦧'){
                         await reaction.message.guild.members.cache.get(user.id).roles.remove(dtfRole.id);
                     }
                 }
             });
         })
-
-        if (!dftChan) return;
-
-        await client.channels.cache.get(dftChan.id).send("<@&" + dtfRole.id + "> 🇪 🇺" + newDate + '\n' + 'React with a single unique emoji ' + '**if you are an EU player!**')
-
-        await client.channels.cache.get(dftChan.id).send("<@&" + dtfRole.id + "> 🇳 🇦" + newDate + '\n' + 'React with a single unique emoji ' + '**if you are an NA player!**')
-
     }
 }
