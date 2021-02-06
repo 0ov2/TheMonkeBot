@@ -2,7 +2,7 @@ const spacetime = require('spacetime');
 
 function GetMatchTime(time) {
     var d = spacetime.now('America/New_York');
-    var s = d.add(7, 'day');
+    var s = d.add(6, 'day');
 
     if (time == 3) {
         if (!s.isDST()) {
