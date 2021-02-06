@@ -1,8 +1,12 @@
+var getChannel = require('./getChannelId');
+
 module.exports = {
     name: 'opMatchAnnouncement',
-    async execute(client, chanid){                                                 
-        await client.channels.cache.get(chanid).send("<@&" + "796855448678563890" + "> Sunday 20 UTC vs DT ").then(function (message){
-            message.react('🦧');
+    async execute(client, chanid){  
+        var chanId = getChannel(client, 'dt-match-announcements');
+                                               
+        client.channels.cache.get(chanid).send("<@&" + "796855448678563890" + "> Sunday 20 UTC vs DT ").then(async function (message){
+            await message.react('🦧');
         })
 
         client.on('messageReactionAdd', async (reaction, user) => {
@@ -13,13 +17,13 @@ module.exports = {
 
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
-
-            console.log(reaction.message.id);
-            var countA = reaction.message.reactions.cache.get('🦧').count;
-
-            
-            if (countA > 2) {
-                await reaction.message.reactions.resolve('🦧').users.remove(user.bot.id);
+            if (reaction.message.channel.id === chanId.id) {
+                console.log(reaction.message.id);
+                var countA = await reaction.message.reactions.cache.get('🦧').count;
+                
+                if (countA > 2) {
+                    await reaction.message.reactions.resolve('🦧').users.remove(user.bot.id);
+                }
             }
         })
     }

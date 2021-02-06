@@ -1,11 +1,11 @@
 var GetMatchTime = require("./getMatchTime");
 module.exports = {
-    name: 'dtAutoAvailability',
+    name: 'tempBiAutoAvailability',
     async execute(client, chanid){   
         var matchTimeEu = GetMatchTime(3);
         var matchTimeNa = GetMatchTime(8); 
         
-        await client.channels.cache.get(chanid).send("<@&" + "438518647003021315" + ">\n" + 
+        await client.channels.cache.get(chanid).send("<@&" + "804170403562913812" + ">\n" + 
         `A - Monday night ${matchTimeNa} ish \n` +
         `B - Tuesday night ${matchTimeNa} ish \n` +
         `C - Wednesday night ${matchTimeNa} ish \n` +
@@ -34,7 +34,7 @@ module.exports = {
 
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
-            if (reaction.message.channel.id === chanId) {
+            if (reaction.message.channel.id === chanid) {
                 var countA = await reaction.message.reactions.cache.get('🇦').count;
                 var countB = await reaction.message.reactions.cache.get('🇧').count;
                 var countC = await reaction.message.reactions.cache.get('🇨').count;

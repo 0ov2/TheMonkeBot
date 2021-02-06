@@ -7,6 +7,6 @@
     "discord.js": "^12.5.1",
     "discord.js-commando": "^0.11.1",
     "node-schedule": "^1.3.2",
-    "spacetime": "^6.12.2"
+    "spacetime": "^6.12.3"
   }
 }
