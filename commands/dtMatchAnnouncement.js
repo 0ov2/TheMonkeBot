@@ -17,12 +17,14 @@ module.exports = {
 
             if (reaction.message.partial) await reaction.message.fetch();
             if (reaction.partial) await reaction.fetch();
-
-            console.log(reaction.message.id);
-            var countA = reaction.message.reactions.cache.get('🦧').count;
+            if (reaction.message.channel.id === chanid) {
+                var countA = await reaction.message.reactions.cache.get('🦧').count;
             
-            if (countA > 2) {
-                await reaction.message.reactions.resolve('🦧').users.remove(user.bot.id);
+                if (countA > 2) {
+                    await reaction.message.reactions.resolve('🦧').users.remove(user.bot.id);
+                }
+            } else {
+                return;
             }
         })
     }

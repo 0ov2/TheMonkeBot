@@ -9,12 +9,14 @@ module.exports = {
         if (duration === 'off') {
             duration = 0
         }
-
-        if (isNaN(duration)) {
+        
+        if (duration == 10) {
+            channel.setRateLimitPerUser(parseInt(600));
+        } else if (isNaN(duration)) {
             message.reply('Please provide either a number of seconds or the word "off"')
             return
+        } else {
+            channel.setRateLimitPerUser(parseInt(duration));
         }
-
-        channel.setRateLimitPerUser(parseInt(duration))
     }
 }
