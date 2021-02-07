@@ -1,7 +1,8 @@
+var fs = require('fs');
 module.exports = {
     name: 'autoAvailability',
-    async execute(client, ChanID){
-        await client.channels.cache.get(ChanID).send("<@&" + "796855448678563890" + ">\n" + //
+    async execute(client, ChanID, opRole){
+        await client.channels.cache.get(ChanID).send("<@&" + opRole + ">\n" + //
         'A - Monday 19 UTC \n' +
         'B - Tuesday 19 UTC \n' +
         'C - Wednesday 19 UTC \n' +
@@ -16,43 +17,10 @@ module.exports = {
             await message.react('🇪'),
             await message.react('🇫'),
             await message.react('🇬');
-        })
+            
+        var options = {encoding: 'utf-8', flag: 'w'};
+        fs.writeFileSync('./opAvailabilityMessage.txt', message.id, options);
 
-        client.on('messageReactionAdd', async (reaction, user) => {
-
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (user.bot) return;
-
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (reaction.message.channel.id === ChanID) {
-                var countA = await reaction.message.reactions.cache.get('🇦').count;
-                var countB = await reaction.message.reactions.cache.get('🇧').count;
-                var countC = await reaction.message.reactions.cache.get('🇨').count;
-                var countD = await reaction.message.reactions.cache.get('🇩').count;
-                var countE = await reaction.message.reactions.cache.get('🇪').count;
-                var countF = await reaction.message.reactions.cache.get('🇫').count;
-                var countG = await reaction.message.reactions.cache.get('🇬').count;
-    
-                if (countA > 2) {
-                    await reaction.message.reactions.resolve('🇦').users.remove(user.bot.id);
-                } else if (countB > 2) {
-                    await reaction.message.reactions.resolve('🇧').users.remove(user.bot.id);
-                } else if (countC > 2) {
-                    await reaction.message.reactions.resolve('🇨').users.remove(user.bot.id);
-                } else if (countD > 2) {
-                    await reaction.message.reactions.resolve('🇩').users.remove(user.bot.id);
-                } else if (countE > 2) {
-                    await reaction.message.reactions.resolve('🇪').users.remove(user.bot.id);
-                } else if (countF > 2) {
-                    await reaction.message.reactions.resolve('🇫').users.remove(user.bot.id);
-                } else if (countG > 2) {
-                    await reaction.message.reactions.resolve('🇬').users.remove(user.bot.id);
-                }
-            } else {
-                return;
-            }
         })
     }
 }

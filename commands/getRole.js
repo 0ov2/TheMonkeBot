@@ -1,21 +1,10 @@
-function GetRole(client, Name, message, reaction) {
+function GetRole(client, Name) {
 
-    if (message !== '') {
-        const myGuild = client.guilds.cache.get(message.guild.id);
-
-        if (!myGuild.roles.cache.find(role => role.name === Name)){
-            return;
-        } else {
-            return myGuild.roles.cache.find(role => role.name === Name);   
-        }
+    const serverId = client.guilds.cache.get(client.guilds.cache.firstKey());
+    if (!serverId.roles.cache.find(role => role.name === Name)) {
+        return;
     } else {
-        const myGuild = client.guilds.cache.get(reaction.message.guild.id);
-
-        if (!myGuild.roles.cache.find(role => role.name === Name)){
-            return;
-        } else {
-            return myGuild.roles.cache.find(role => role.name === Name);   
-        }
+        return serverId.roles.cache.find(role => role.name === Name); 
     }
 }
 

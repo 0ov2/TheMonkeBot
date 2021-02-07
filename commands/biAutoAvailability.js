@@ -1,5 +1,5 @@
 var getChannel = require('./getChannelId');
-
+// NOT USED ATM
 module.exports = {
     name: 'biAutoAvailability',
     async execute(client, chanid){    
@@ -16,9 +16,7 @@ module.exports = {
                 if (reaction.message.partial) await reaction.message.fetch();
                 if (reaction.partial) await reaction.fetch();
                 if (user.bot) return;
-    
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
+                
                 if (reaction.message.channel.id === chanId.id) {
                     var countA = await reaction.message.reactions.cache.get('8️⃣').count;
                     var countB = await reaction.message.reactions.cache.get('9️⃣').count;
