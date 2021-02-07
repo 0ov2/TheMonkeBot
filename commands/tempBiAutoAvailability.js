@@ -1,11 +1,12 @@
 var GetMatchTime = require("./getMatchTime");
+var fs = require('fs');
 module.exports = {
     name: 'tempBiAutoAvailability',
-    async execute(client, chanid){   
+    async execute(client, chanid, biRole){   
         var matchTimeEu = GetMatchTime(3);
         var matchTimeNa = GetMatchTime(8); 
         
-        await client.channels.cache.get(chanid).send("<@&" + "804170403562913812" + ">\n" + 
+        await client.channels.cache.get(chanid).send("<@&" + biRole + ">\n" + 
         `A - Monday night ${matchTimeNa} ish \n` +
         `B - Tuesday night ${matchTimeNa} ish \n` +
         `C - Wednesday night ${matchTimeNa} ish \n` +
@@ -24,49 +25,9 @@ module.exports = {
             await message.react('🇬'),
             await message.react('🇭'),
             await message.react('🇮');
-        })
 
-        client.on('messageReactionAdd', async (reaction, user) => {
-
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (user.bot) return;
-
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (reaction.message.channel.id === chanid) {
-                var countA = await reaction.message.reactions.cache.get('🇦').count;
-                var countB = await reaction.message.reactions.cache.get('🇧').count;
-                var countC = await reaction.message.reactions.cache.get('🇨').count;
-                var countD = await reaction.message.reactions.cache.get('🇩').count;
-                var countE = await reaction.message.reactions.cache.get('🇪').count;
-                var countF = await reaction.message.reactions.cache.get('🇫').count;
-                var countG = await reaction.message.reactions.cache.get('🇬').count;
-                var countH = await reaction.message.reactions.cache.get('🇭').count;
-                var countI = await reaction.message.reactions.cache.get('🇮').count;
-
-                if (countA > 2) {
-                    await reaction.message.reactions.resolve('🇦').users.remove(user.bot.id);
-                } else if (countB > 2) {
-                    await reaction.message.reactions.resolve('🇧').users.remove(user.bot.id);
-                } else if (countC > 2) {
-                    await reaction.message.reactions.resolve('🇨').users.remove(user.bot.id);
-                } else if (countD > 2) {
-                    await reaction.message.reactions.resolve('🇩').users.remove(user.bot.id);
-                } else if (countE > 2) {
-                    await reaction.message.reactions.resolve('🇪').users.remove(user.bot.id);
-                } else if (countF > 2) {
-                    await reaction.message.reactions.resolve('🇫').users.remove(user.bot.id);
-                } else if (countG > 2) {
-                    await reaction.message.reactions.resolve('🇬').users.remove(user.bot.id);
-                } else if (countH > 2) {
-                    await reaction.message.reactions.resolve('🇭').users.remove(user.bot.id);
-                } else if (countI > 2) {
-                    await reaction.message.reactions.resolve('🇮').users.remove(user.bot.id);
-                }
-            } else {
-                return;
-            }
+            var options = {encoding: 'utf-8', flag: 'w'};
+            fs.writeFileSync('./biAvailabilityMessage.txt', message.id, options);
         })
     }
 }

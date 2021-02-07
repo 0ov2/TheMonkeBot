@@ -32,7 +32,9 @@ client.once('ready', () => { // automatic commands
     var biAvailabilityId = getChannelId(client, 'bi-availability');
     var monkeChan = getChannelId(client, 'monke-bot');
 
-    // var opRole = getRole(client, 'op', '', '');
+    const opRole = getRole(client, 'op');
+    const dtRole = getRole(client, 'dream');
+    const biRole = getRole(client, 'bi');
 
     // Availability
     // EU
@@ -40,8 +42,8 @@ client.once('ready', () => { // automatic commands
         console.log('monke do availability');
         try {
 
-        opAvailabilityId.send(client.command.get('autoAvailability').execute(client, opAvailabilityId.id));
-        opMatchAnnouncement.send(client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement.id));
+        client.command.get('autoAvailability').execute(client, opAvailabilityId.id, opRole);
+        client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement.id, opRole);
 
         } catch (error) {
             console.log(error);
@@ -49,14 +51,15 @@ client.once('ready', () => { // automatic commands
 
         console.log('monke done. *monke noises*');
     })
+
     // NA
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         console.log('monke do availability');
         try {
 
-            dtAvailabilityId.send(client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id)); 
-            biAvailabilityId.send(client.command.get('tempBiAutoAvailability').execute(client, biAvailabilityId.id));
-            dtMatchAnnouncement.send(client.command.get('dtMatchAnnouncement').execute(client, dtMatchAnnouncement.id));
+            client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id, dtRole); 
+            client.command.get('tempBiAutoAvailability').execute(client, biAvailabilityId.id, biRole);
+            client.command.get('dtMatchAnnouncement').execute(client, dtMatchAnnouncement.id, dtRole);
     
         } catch (error) {
             console.log(error);
@@ -84,8 +87,11 @@ client.on('message', message => { // manual commands
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
 
-    const roleid = getRole(client, 'superpowers', message);
-    const monkeRole = getRole(client, 'Monke', message);
+    const roleid = getRole(client, 'superpowers');
+    const monkeRole = getRole(client, 'Monke');
+    const opRole = getRole(client, 'op');
+    const dreamRole = getRole(client, 'dream');
+    const biRole = getRole(client, 'bi');
 
     if (command === 'slow') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
@@ -101,17 +107,16 @@ client.on('message', message => { // manual commands
             var dtMatchAnnouncement = getChannelId(client, 'dt-match-announcements');
 
             if (message.channel.id === opAvailabilityId.id) {
-                client.command.get('autoAvailability').execute(client, opAvailabilityId.id);
+                client.command.get('autoAvailability').execute(client, opAvailabilityId.id, opRole.id);
             }else if (message.channel.id === dtAvailabilityId.id) {
-                client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id);
+                client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId.id, dreamRole.id);
             }else if (message.channel.id === biAvailabilityId.id) {
-                client.command.get('tempBiAutoAvailability').execute(client, biAvailabilityId.id);
+                client.command.get('tempBiAutoAvailability').execute(client, biAvailabilityId.id, biRole.id);
             }else if (message.channel.id === opMatchAnnouncement.id) {
-                client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement.id);
+                client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement.id, opRole.id);
             }else if (message.channel.id === dtMatchAnnouncement.id) {
-                client.command.get('dtMatchAnnouncement').execute(client, dtMatchAnnouncement.id);
+                client.command.get('dtMatchAnnouncement').execute(client, dtMatchAnnouncement.id, dreamRole.id);
             }else {
-                message.delete();
                 return;
             }
             
@@ -140,9 +145,16 @@ client.on('message', message => { // manual commands
 //client.command.get('roleClaimMessageReaction').execute(client);
 // role claim
 client.on("messageReactionAdd", async (reaction, user) => {
-    var chanId = getChannelId(client, 'dream-teams-friendly');
+    var dtfChanId = getChannelId(client, 'dream-teams-friendly');
+    var opChanId = getChannelId(client, 'op-availability');
+    var dtChanId = getChannelId(client, 'dt-availability');
+    var biChanId = getChannelId(client, 'bi-availability');
+
     var options = {encoding: 'utf-8', flag: 'r'};
-    var messageId = fs.readFileSync('./roleClaimMessage.txt', options);
+    var dtfMessageId = fs.readFileSync('./roleClaimMessage.txt', options);
+    var opMessageId = fs.readFileSync('./opAvailabilityMessage.txt', options);
+    var dtMessageId = fs.readFileSync('./dtAvailabilityMessage.txt', options);
+    var biMessageId = fs.readFileSync('./biAvailabilityMessage.txt', options);
 
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
@@ -150,11 +162,17 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
-    if (reaction.message.channel.id === chanId.id && reaction.message.id == messageId){
-        dtfRole = getRole(client, 'dtf', '', reaction);
+    if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == dtfMessageId){
+        dtfRole = getRole(client, 'dtf');
         if (reaction.emoji.name === '🦧'){
             await reaction.message.guild.members.cache.get(user.id).roles.add(dtfRole.id);
         }
+    } else if (reaction.message.channel.id === opChanId.id && reaction.message.id == opMessageId) {
+        await client.command.get('countreactions').execute(reaction, user, 'op');
+    } else if (reaction.message.channel.id === dtChanId.id && reaction.message.id == dtMessageId) {
+        await client.command.get('countreactions').execute(reaction, user, 'dt');
+    } else if (reaction.message.channel.id === biChanId.id && reaction.message.id == biMessageId) {
+        await client.command.get('countreactions').execute(reaction, user, 'bi');
     } else {
         return;
     }
@@ -172,7 +190,7 @@ client.on("messageReactionRemove", async (reaction, user) => {
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
     if (reaction.message.channel.id === chanId.id && reaction.message.id == messageId){
-        dtfRole = getRole(client, 'dtf', '', reaction);
+        dtfRole = getRole(client, 'dtf');
         if (reaction.emoji.name === '🦧'){
             await reaction.message.guild.members.cache.get(user.id).roles.remove(dtfRole.id);
         }
