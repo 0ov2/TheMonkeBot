@@ -1,4 +1,3 @@
-const getRole = require('./getRole');
 const getChan = require('./getChannelId');
 const fs = require('fs');
 
@@ -18,7 +17,7 @@ module.exports = {
             await message.react('🦧');
 
             var options = {encoding: 'utf-8', flag: 'w'};
-            fs.writeFileSync('./roleClaimMessage.txt', message.id, options);
+            fs.writeFileSync('./messageIDs/roleClaimMessage.txt', message.id, options);
         })
     }
 }

@@ -6,7 +6,7 @@ module.exports = {
         var matchTimeEu = GetMatchTime(3);
         var matchTimeNa = GetMatchTime(8); 
         
-        await client.channels.cache.get(chanid).send("<@&" + dreamRole + ">\n" + 
+        await client.channels.cache.get(chanid.id).send("<@&" + dreamRole + ">\n" + 
         `A - Monday night ${matchTimeNa} ish \n` +
         `B - Tuesday night ${matchTimeNa} ish \n` +
         `C - Wednesday night ${matchTimeNa} ish \n` +
@@ -27,7 +27,7 @@ module.exports = {
             await message.react('🇮');
 
         var options = {encoding: 'utf-8', flag: 'w'};
-        fs.writeFileSync('./dtAvailabilityMessage.txt', message.id, options);
+        fs.writeFileSync('./messageIDs/dtAvailabilityMessage.txt', message.id, options);
 
         })
     }
