@@ -1,237 +1,78 @@
-var getChannel = require('./getChannelId');
+const fs = require("fs");
 // NOT USED ATM
 module.exports = {
     name: 'biAutoAvailability',
-    async execute(client, chanid){    
-        var chanId = getChannel(client, 'bi-availability');
+    async execute(client, chanid, roleid){    
+        var stream = fs.createWriteStream("./messageIDs/biAvailabilityMessageIds.txt", {flags:'a'});
 
-        await client.channels.cache.get(chanid).send("<@&" + "804170403562913812" + ">\n" + 
+        await client.channels.cache.get(chanid.id).send("<@&" + roleid + ">\n" + 
         'Monday').then(async function (message){
+            stream.write(message.id + "\n");
+
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
 
-            client.on('messageReactionAdd', async (reaction, user) => {
-
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (user.bot) return;
-                
-                if (reaction.message.channel.id === chanId.id) {
-                    var countA = await reaction.message.reactions.cache.get('8️⃣').count;
-                    var countB = await reaction.message.reactions.cache.get('9️⃣').count;
-                    var countC = await reaction.message.reactions.cache.get('🔟').count;
-        
-                    
-                    if (countA > 2) {
-                        await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
-                    } else if (countB > 2) {
-                        await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
-                    } else if (countC > 2) {
-                        await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
-                    }
-                } else {
-                    return;
-                }
-            })
         })
 
-        client.channels.cache.get(chanid).send( 
+        client.channels.cache.get(chanid.id).send( 
         'Tuesday').then(async function (message){
+            stream.write(message.id + "\n");
+
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
 
-            client.on('messageReactionAdd', async (reaction, user) => {
-
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (user.bot) return;
-    
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (reaction.message.channel.id === chanId.id) {
-                    var countA = await reaction.message.reactions.cache.get('8️⃣').count;
-                    var countB = await reaction.message.reactions.cache.get('9️⃣').count;
-                    var countC = await reaction.message.reactions.cache.get('🔟').count;
-        
-                    
-                    if (countA > 2) {
-                        await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
-                    } else if (countB > 2) {
-                        await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
-                    } else if (countC > 2) {
-                        await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
-                    }
-                } else {
-                    return;
-                }
-            })
         })
 
-        client.channels.cache.get(chanid).send( 
+        client.channels.cache.get(chanid.id).send( 
         'Wednesday').then(async function (message){
+            stream.write(message.id + "\n");
+
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
 
-            client.on('messageReactionAdd', async (reaction, user) => {
-
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (user.bot) return;
-    
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (reaction.message.channel.id === chanId.id) {
-                    var countA = await reaction.message.reactions.cache.get('8️⃣').count;
-                    var countB = await reaction.message.reactions.cache.get('9️⃣').count;
-                    var countC = await reaction.message.reactions.cache.get('🔟').count;
-        
-                    
-                    if (countA > 2) {
-                        await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
-                    } else if (countB > 2) {
-                        await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
-                    } else if (countC > 2) {
-                        await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
-                    }
-                } else {
-                    return;
-                }
-            })
         })
 
-        client.channels.cache.get(chanid).send(
-        'Thursday').then(async function (message){
+        client.channels.cache.get(chanid.id).send( 
+            'Thursday').then(async function (message){
+                stream.write(message.id + "\n");
+    
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
-
-            client.on('messageReactionAdd', async (reaction, user) => {
-
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (user.bot) return;
     
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (reaction.message.channel.id === chanId.id) {
-                    var countA = await reaction.message.reactions.cache.get('8️⃣').count;
-                    var countB = await reaction.message.reactions.cache.get('9️⃣').count;
-                    var countC = await reaction.message.reactions.cache.get('🔟').count;
-        
-                    
-                    if (countA > 2) {
-                        await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
-                    } else if (countB > 2) {
-                        await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
-                    } else if (countC > 2) {
-                        await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
-                    }
-                } else {
-                    return;
-                } 
-            })
         })
 
-        client.channels.cache.get(chanid).send( 
+        client.channels.cache.get(chanid.id).send( 
         'Friday').then(async function (message){
+            stream.write(message.id + "\n");
+
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
 
-            client.on('messageReactionAdd', async (reaction, user) => {
-
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (user.bot) return;
-    
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (reaction.message.channel.id === chanId.id) {
-                    var countA = await reaction.message.reactions.cache.get('8️⃣').count;
-                    var countB = await reaction.message.reactions.cache.get('9️⃣').count;
-                    var countC = await reaction.message.reactions.cache.get('🔟').count;
-        
-                    
-                    if (countA > 2) {
-                        await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
-                    } else if (countB > 2) {
-                        await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
-                    } else if (countC > 2) {
-                        await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
-                    }
-                } else {
-                    return;
-                }
-            })
         })
 
-        client.channels.cache.get(chanid).send( 
+        client.channels.cache.get(chanid.id).send( 
         'Saturday').then(async function (message){
+            stream.write(message.id + "\n");
+
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
 
-            client.on('messageReactionAdd', async (reaction, user) => {
-
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (user.bot) return;
-    
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (reaction.message.channel.id === chanId.id) {
-                    var countA = await reaction.message.reactions.cache.get('8️⃣').count;
-                    var countB = await reaction.message.reactions.cache.get('9️⃣').count;
-                    var countC = await reaction.message.reactions.cache.get('🔟').count;
-        
-                    
-                    if (countA > 2) {
-                        await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
-                    } else if (countB > 2) {
-                        await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
-                    } else if (countC > 2) {
-                        await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
-                    }
-                } else {
-                    return;
-                }
-            })
         })
 
-        client.channels.cache.get(chanid).send(
+        client.channels.cache.get(chanid.id).send(
         'Sunday').then(async function (message){
+            stream.write(message.id + "\n");
+
             await message.react('8️⃣'),
             await message.react('9️⃣'),
             await message.react('🔟');
 
-            client.on('messageReactionAdd', async (reaction, user) => {
-
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (user.bot) return;
-    
-                if (reaction.message.partial) await reaction.message.fetch();
-                if (reaction.partial) await reaction.fetch();
-                if (reaction.message.channel.id === chanId.id) {
-                    var countA = await reaction.message.reactions.cache.get('8️⃣').count;
-                    var countB = await reaction.message.reactions.cache.get('9️⃣').count;
-                    var countC = await reaction.message.reactions.cache.get('🔟').count;
-        
-                    
-                    if (countA > 2) {
-                        await reaction.message.reactions.resolve('8️⃣').users.remove(user.bot.id);
-                    } else if (countB > 2) {
-                        await reaction.message.reactions.resolve('9️⃣').users.remove(user.bot.id);
-                    } else if (countC > 2) {
-                        await reaction.message.reactions.resolve('🔟').users.remove(user.bot.id);
-                    }
-                } else {
-                    return;
-                }
-            })
         })
     }
 }

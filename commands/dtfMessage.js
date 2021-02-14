@@ -21,30 +21,12 @@ module.exports = {
             
             var options = {encoding: 'utf-8', flag: 'w'};
             fs.writeFileSync('./messageIDs/euDtfMessageId.txt', Message.id, options);
-
-            // client.on('messageReactionAdd', async (reaction, user) => {
-            
-            //     if (reaction.message.channel.id == dftChan.id && reaction.message.id == Message.id) {
-            //         if (reaction.message.reactions.cache.get(reaction._emoji.name).count > 1) {
-            //             await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-            //         }
-            //     }
-            // });
         })
 
         client.channels.cache.get(dftChan.id).send("<@&" + dtfRole.id + "> 🇳 🇦" + newDate + '\n' + 'React with a single unique emoji ' + '**if you are an NA player!**').then(async function (Message) {
             
             var options = {encoding: 'utf-8', flag: 'w'};
             fs.writeFileSync('./messageIDs/naDtfMessageId.txt', Message.id, options);
-            
-            // client.on('messageReactionAdd', async (reaction, user) => {
-            
-            //     if (reaction.message.channel.id == dftChan.id && reaction.message.id == Message.id) {
-            //         if (reaction.message.reactions.cache.get(reaction._emoji.name).count > 1) {
-            //             await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-            //         }
-            //     }
-            // });
         })
     }
 }

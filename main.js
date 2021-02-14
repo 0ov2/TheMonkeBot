@@ -14,6 +14,8 @@ var checkSignUp = require("./commands/checkSignUp");
 
 var updateMessageIds = require("./commands/updateMessageIds");
 
+var checkBiMessageId = require("./commands/checkBiMessageId");
+
 var schedule = require('node-schedule');
 
 client.command = new Discord.Collection();
@@ -29,9 +31,10 @@ for (const file of commandFiles){
 client.once('ready', () => { // automatic commands
     console.log('monke');
 
-    //updateMessageIds(client);
+    updateMessageIds(client);
 
     var monkeChan = getChannelId(client, 'monke-bot');
+    var stream = fs.createWriteStream("./messageIDs/biAvailabilityMessageIds.txt", {flags:'w'});
 
     // Availability
     // EU
@@ -53,9 +56,9 @@ client.once('ready', () => { // automatic commands
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         console.log('monke do availability');
         try {
-
+            stream.write("");
             client.command.get('dtAutoAvailability').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream')); 
-            client.command.get('tempBiAutoAvailability').execute(client, getChannelId(client, 'bi-availability'), getRole(client, 'bi'));
+            //client.command.get('biAutoAvailability').execute(client, getChannelId(client, 'bi-availability'), getRole(client, 'bi'));
             client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-match-announcements'), getRole(client, 'dream'));
     
         } catch (error) {
@@ -69,7 +72,7 @@ client.once('ready', () => { // automatic commands
     schedule.scheduleJob('0 20 * * 6', () => { //30 19 * * 6 - real time
         monkeChan.send("-dtf");
     })
-    schedule.scheduleJob('0 1 * * 0', () => { //0 23 * * 6
+    schedule.scheduleJob('0 2 * * 0', () => { //0 23 * * 6
         monkeChan.send("-dtfdel");
     })
     schedule.scheduleJob('30 18 * * 0', () => { //
@@ -80,7 +83,7 @@ client.once('ready', () => { // automatic commands
     // })
 })
 
-client.on('message', message => { // manual commands
+client.on('message', async (message) => { // manual commands
 
     if(!message.content.startsWith(prefix)) return;
 
@@ -100,6 +103,7 @@ client.on('message', message => { // manual commands
         }
     } else if (command === 'av') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
+            var stream = fs.createWriteStream("./messageIDs/biAvailabilityMessageIds.txt", {flags:'w'});
 
             var opAvailabilityId = getChannelId(client, 'op-availability');
             var dtAvailabilityId = getChannelId(client, 'dt-availability');
@@ -112,7 +116,8 @@ client.on('message', message => { // manual commands
             }else if (message.channel.id === dtAvailabilityId.id) {
                 client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId, dreamRole.id);
             }else if (message.channel.id === biAvailabilityId.id) {
-                client.command.get('tempBiAutoAvailability').execute(client, biAvailabilityId, biRole.id);
+                stream.write("");
+                client.command.get('biAutoAvailability').execute(client, biAvailabilityId, biRole.id);
             }else if (message.channel.id === opMatchAnnouncement.id) {
                 client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement, opRole.id);
             }else if (message.channel.id === dtMatchAnnouncement.id) {
@@ -141,7 +146,7 @@ client.on('message', message => { // manual commands
             client.command.get('lfgmessage').execute(client, Discord, message);
 
         }
-    } else if (command === 'role') { // UPADTE ROLE MESSAGE ID
+    } else if (command === 'role') {
         if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
             
             client.command.get('mixedFriendlyAnnouncement').execute(client, Discord, message);
@@ -157,6 +162,12 @@ client.on('message', message => { // manual commands
             //client.command.get('dtfreminder').execute(client, chan);
 
         }
+    } else if (command === 'remadd') {
+        if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
+           
+            await client.command.get('managesignups').execute(args, message);
+
+        }
     }
 })
 
@@ -168,18 +179,19 @@ client.on("messageReactionAdd", async (reaction, user) => {
     var biChanId = getChannelId(client, 'bi-availability');
     var opMatchChanId = getChannelId(client, 'op-match-announcements');
     var dtMatchChanId = getChannelId(client, 'dt-match-announcements');
-
+    
     var options = {encoding: 'utf-8', flag: 'r'};
     var dtfMessageId = fs.readFileSync('./messageIDs/roleClaimMessage.txt', options);
     var euDtfMessageId = fs.readFileSync('./messageIDs/euDtfMessageId.txt', options);
     var naDtfMessageId = fs.readFileSync('./messageIDs/naDtfMessageId.txt', options);
     var opMessageId = fs.readFileSync('./messageIDs/opAvailabilityMessage.txt', options);
     var dtMessageId = fs.readFileSync('./messageIDs/dtAvailabilityMessage.txt', options);
-    var biMessageId = fs.readFileSync('./messageIDs/biAvailabilityMessage.txt', options);
+    var biMessageId = fs.readFileSync('./messageIDs/biAvailabilityMessageIds.txt', options);
     var opMatchMessageId = fs.readFileSync('./messageIDs/opMatchAnnouncementID.txt', options);
     var dtMatchMessageId = fs.readFileSync('./messageIDs/dtMatchAnnouncementID.txt', options);
     var stream = fs.createWriteStream("./messageIDs/dtfSignedUpIds.txt", {flags:'a'});
     
+
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
@@ -193,7 +205,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
         await client.command.get('countreactions').execute(reaction, user, 'op');
     } else if (reaction.message.channel.id === dtChanId.id && reaction.message.id == dtMessageId) {
         await client.command.get('countreactions').execute(reaction, user, 'dt');
-    } else if (reaction.message.channel.id === biChanId.id && reaction.message.id == biMessageId) {
+    } else if (reaction.message.channel.id === biChanId.id && checkbimessageid == true) {
         await client.command.get('countreactions').execute(reaction, user, 'bi');
     } else if (reaction.message.channel.id === opMatchChanId.id && reaction.message.id == opMatchMessageId) {
         await client.command.get('countreactions').execute(reaction, user, 'opmatch');
