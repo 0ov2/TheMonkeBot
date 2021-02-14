@@ -27,6 +27,22 @@ module.exports = {
                 await reaction.message.reactions.resolve(reaction.emoji.name).users.remove(user.bot.id);
             }
             
+        } else if (team == 'opmatch') {
+
+            var count = await reaction.message.reactions.cache.get(reaction.emoji.name).count;
+
+            if (count > 2) {
+                await reaction.message.reactions.resolve(reaction.emoji.name).users.remove(user.bot.id);
+            }
+            
+        } else if (team == 'dtmatch') {
+
+            var count = await reaction.message.reactions.cache.get(reaction.emoji.name).count;
+
+            if (count > 2) {
+                await reaction.message.reactions.resolve(reaction.emoji.name).users.remove(user.bot.id);
+            }
+            
         } else {
             return;
         }
