@@ -1,18 +1,22 @@
 const fs = require('fs');
+const readline = require('readline');
 
 async function checkBiMessageId(reaction) {
-    var optionsR = {encoding: 'utf-8', flag: 'r'};
 
-    fs.readFile('./messageIDs/biAvailabilityMessageIds.txt', optionsR, function(err, data) {
-        let dataArray = data.split('\n');
+    const fileStream = fs.createReadStream('./messageIDs/biAvailabilityMessageIds.txt');
 
-        for (let i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].trim() == reaction.message.id) {
-                return true;
-            }
-            return false;
-        }
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
     });
+
+    var count = 0;
+    for await (const line of rl) {
+        if (line == reaction.message.id){
+            count++
+        }
+    }
+    return count;
 }
 
 module.exports = checkBiMessageId;
