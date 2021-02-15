@@ -1,5 +1,4 @@
 const fs = require("fs");
-// NOT USED ATM
 module.exports = {
     name: 'biAutoAvailability',
     async execute(client, chanid, roleid){    
