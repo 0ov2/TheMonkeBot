@@ -158,20 +158,32 @@ client.on('message', async (message) => { // manual commands
     } else if (command === 'rem') {
         if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
            
-            //var chan = getChannelId(client, 'dream-teams-friendly');
-            //client.command.get('dtfreminder').execute(client, chan);
+            var chan = getChannelId(client, 'dream-teams-friendly');
+            client.command.get('dtfreminder').execute(client, chan);
 
         }
     } else if (command === 'remadd') {
         if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
            
-            //await client.command.get('managesignups').execute(args, message);
+            await client.command.get('managesignups').execute(args, message, client, 'add');
+
+        }
+    } else if (command === 'remdel') {
+        if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
+           
+            await client.command.get('managesignups').execute(args, message, client, 'del');
+
+        }
+    } else if (command === 'remcheck') {
+        if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
+            
+            var chan = getChannelId(client, 'monke-bot');
+            client.command.get('dtfchecksignedup').execute(message, chan, client);
 
         }
     }
 })
 
-// role claim
 client.on("messageReactionAdd", async (reaction, user) => {
     var dtfChanId = getChannelId(client, 'dream-teams-friendly');
     var opChanId = getChannelId(client, 'op-availability');
