@@ -5,6 +5,7 @@ module.exports = {
     async execute(message, chan, client) {
 
         var users = [];
+        var usersNotFound = [];
         var options = {encoding: 'utf-8', flag: 'r'};
 
         fs.readFile('./messageIDs/dtfSignedUpIds.txt', options, async function(err, data) {
@@ -14,12 +15,17 @@ module.exports = {
 
             for (let i = 0; i < dataArray.length; i++) {
                 if (dataArray[i] !== '' ) {
-                    var user = serverId.client.users.cache.get(dataArray[i])
+                    if (serverId.client.users.cache.get(dataArray[i])){
 
-                    users.push(user.username);
+                        var user = serverId.client.users.cache.get(dataArray[i])
+                        users.push(user.username);
+
+                    } else {
+                        usersNotFound.push(dataArray[i].toString());
+                    }
                 }
             }
-
+            chan.send(usersNotFound.toString() + ' users not found.');
             chan.send(users.toString() + " ");
         });
     }
