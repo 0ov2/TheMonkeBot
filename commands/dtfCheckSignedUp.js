@@ -25,8 +25,15 @@ module.exports = {
                     }
                 }
             }
-            chan.send(usersNotFound.toString() + ' users not found.');
-            chan.send(users.toString() + " ");
+
+            if(usersNotFound.toString() == ""){
+                chan.send(users.toString() + " ");
+            }else {
+                chan.send('Users not found:' + '\n');
+                chan.send(usersNotFound.toString() + " ");
+                chan.send('Users found:' + '\n');
+                chan.send(users.toString() + " ");
+            }
         });
     }
 }
