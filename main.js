@@ -317,4 +317,4 @@ client.on("messageReactionRemove", async (reaction, user) => {
     }
 })
 
-client.login(process.env.token); //process.env.token  //require("./token.js")     //require("./testToken.js")
+client.login(process.env.token); //process.env.token    //require("./testToken.js")

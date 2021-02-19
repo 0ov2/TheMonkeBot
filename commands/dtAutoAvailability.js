@@ -6,7 +6,7 @@ module.exports = {
         var matchTimeEu = GetMatchTime(3);
         var matchTimeNa = GetMatchTime(8); 
         
-        await client.channels.cache.get(chanid.id).send("<@&" + dreamRole + ">\n" + 
+        await client.channels.cache.get(chanid.id).send("<@&" + dreamRole + "> A new week!\n" + 
         `A - Monday night ${matchTimeNa} ish \n` +
         `B - Tuesday night ${matchTimeNa} ish \n` +
         `C - Wednesday night ${matchTimeNa} ish \n` +
