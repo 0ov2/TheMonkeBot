@@ -234,14 +234,21 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId) {
         var check = await checkSignUp(user);
-        if (reaction.message.reactions.cache.get(reaction._emoji.name).count > 1 && check < 1) { // Stacking emojis
-
-            await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+        if (reaction.count > 1 && check < 1) { // Stacking emojis
+            if (!reaction._emoji.id) {
+                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+            } else {
+                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+            }
             await client.command.get('directmessage').execute(user);
         } 
         if (check > 0) {
-
-            await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+            if (!reaction._emoji.id){
+                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+            } else{
+                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+            }
+            
             await client.command.get('uniqueemojidirectmessage').execute(user);
             stream.write(user.id + "\n");
 
@@ -250,14 +257,20 @@ client.on("messageReactionAdd", async (reaction, user) => {
         }
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId) {
         var check = await checkSignUp(user);
-        if (reaction.message.reactions.cache.get(reaction._emoji.name).count > 1 && check < 1) {
-
-            await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+        if (reaction.count > 1 && check < 1) {
+            if (!reaction._emoji.id){
+                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+            } else{
+                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+            }
             await client.command.get('directmessage').execute(user);
         } 
         if (check > 0) {
-
-            await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+            if (!reaction._emoji.id){
+                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+            } else{
+                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+            }
             await client.command.get('uniqueemojidirectmessage').execute(user);
             stream.write(user.id + "\n");
 
