@@ -60,6 +60,14 @@ async function updateMessageIds(client) {
     var opatchMessages = await opMatchChan.messages.fetch();
     var opMatchMessage = opatchMessages.find(msg => msg.content.includes(opRole.id) && msg.author.bot == true);
     fs.writeFileSync('./messageIDs/opMatchAnnouncementID.txt', opMatchMessage.id, options);
+
+    // LFG
+    var LfgRoleMessage = await client.channels.cache.find(chan => chan.name == 'lfg-role-claim');
+    var lfgMessages = await LfgRoleMessage.messages.fetch();
+    if (lfgMessages.find(msg => msg.content == '' && msg.author.bot == true)){
+        var lfgRoleClaim = lfgMessages.find(msg => msg.content == '' && msg.author.bot == true);
+        fs.writeFileSync('./messageIDs/lfgMessageId.txt', lfgRoleClaim.id, options);
+    }
 }
 
 module.exports = updateMessageIds;
