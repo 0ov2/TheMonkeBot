@@ -143,7 +143,7 @@ client.on('message', async (message) => { // manual commands
     } else if (command === 'lfg') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
             
-            client.command.get('lfgmessage').execute(client, Discord, message);
+            client.command.get('lfgmessage').execute(client, Discord, getChannelId(client, 'lfg-role-claim'));
 
         }
     } else if (command === 'role') {
@@ -191,6 +191,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
     var biChanId = getChannelId(client, 'bi-availability');
     var opMatchChanId = getChannelId(client, 'op-match-announcements');
     var dtMatchChanId = getChannelId(client, 'dt-match-announcements');
+    var lfgChan = getChannelId(client, 'lfg-role-claim');
     
     var options = {encoding: 'utf-8', flag: 'r'};
     var dtfMessageId = fs.readFileSync('./messageIDs/roleClaimMessage.txt', options);
@@ -200,6 +201,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
     var dtMessageId = fs.readFileSync('./messageIDs/dtAvailabilityMessage.txt', options);
     var opMatchMessageId = fs.readFileSync('./messageIDs/opMatchAnnouncementID.txt', options);
     var dtMatchMessageId = fs.readFileSync('./messageIDs/dtMatchAnnouncementID.txt', options);
+    var lfgMessageId = fs.readFileSync('./messageIDs/lfgMessageId.txt', options);
     var stream = fs.createWriteStream("./messageIDs/dtfSignedUpIds.txt", {flags:'a'});
     var checkBi = await checkBiMessageId(reaction)
 
@@ -211,6 +213,14 @@ client.on("messageReactionAdd", async (reaction, user) => {
         dtfRole = getRole(client, 'dtf');
         if (reaction.emoji.name === '🦧'){
             await reaction.message.guild.members.cache.get(user.id).roles.add(dtfRole.id);
+        }
+    } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == lfgMessageId) {
+        const pavlovRole = getRole(client, 'pavlov-lfg');
+        const pop1Role = getRole(client, 'pop1-lfg');
+        if (reaction.emoji.name === '🍆'){
+            await reaction.message.guild.members.cache.get(user.id).roles.add(pavlovRole.id);
+        } else if (reaction.emoji.name === '💦') {
+            await reaction.message.guild.members.cache.get(user.id).roles.add(pop1Role.id);
         }
     } else if (reaction.message.channel.id === opChanId.id && reaction.message.id == opMessageId) {
 
@@ -286,10 +296,13 @@ client.on("messageReactionRemove", async (reaction, user) => {
     var optionsR = {encoding: 'utf-8', flag: 'r'};
 
     var dtfChanId = getChannelId(client, 'dream-teams-friendly');
+    var lfgChan = getChannelId(client, 'lfg-role-claim');
+    var chanId = getChannelId(client, 'dream-teams-friendly');
+
+    var lfgMessageId = fs.readFileSync('./messageIDs/lfgMessageId.txt', optionsR);
     var euDtfMessageId = fs.readFileSync('./messageIDs/euDtfMessageId.txt', optionsR);
     var naDtfMessageId = fs.readFileSync('./messageIDs/naDtfMessageId.txt', optionsR);
 
-    var chanId = getChannelId(client, 'dream-teams-friendly');
     var messageId = fs.readFileSync('./messageIDs/roleClaimMessage.txt', optionsR);
 
     if (user.bot) return;
@@ -303,6 +316,16 @@ client.on("messageReactionRemove", async (reaction, user) => {
             var userReaction = await reaction.message.guild.members.cache.get(user.id);
             await userReaction.roles.remove(dtfRole.id);
 
+        }
+    } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == lfgMessageId) {
+        const pavlovRole = getRole(client, 'pavlov-lfg');
+        const pop1Role = getRole(client, 'pop1-lfg');
+        if (reaction.emoji.name === '🍆'){
+            var lfgPavUser = await reaction.message.guild.members.cache.get(user.id);
+            await lfgPavUser.roles.remove(pavlovRole.id);
+        } else if (reaction.emoji.name === '💦') {
+            var lfgPopUser = await reaction.message.guild.members.cache.get(user.id);
+            await lfgPopUser.roles.remove(pop1Role.id);
         }
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId){
 

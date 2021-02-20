@@ -1,53 +1,26 @@
-const getRole = require('./getRole')
-const getChannel = require('./getChannelId');
-
+const fs = require('fs');
+var getRole = require('./getRole');
+var getChannel = require('./getChannelId');
 module.exports = {
     name: 'lfgmessage',
-    async execute(client, Discord, message){
-
-        const pavlovRole = getRole(client, 'pavlov-lfg', message);
-        const pop1Role = getRole(client, 'pop1-lfg', message);
-
-        const lfgChan = getChannel(client, 'lfg-role-claim');
+    async execute(client, Discord, chan){
+        var everyoneRole = getRole(client, '@everyone');
+        var lfgChan = getChannel(client, 'looking-for-gamers')
 
         // role claim
         let embed = new Discord.MessageEmbed()
-        .setTitle('React to the role you want!')
+        .setTitle('Roles')
         .setColor("ORANGE")
-        .setDescription('🍆 - Pavlov \n' + '💦 - Population One') 
-       
-        await client.channels.cache.get(lfgChan.id).send(embed).then(async function (message){
+        .setDescription('🍆 - Pavlov \n' + '💦 - Population One')
+
+        await chan.send(everyoneRole.name +` Please react to the emotes below to get the Pavlov LFG and Pop1 LFG roles which will be used in <#${lfgChan.id}> when people want to find others to play with!`);
+
+        client.channels.cache.get(chan.id).send(embed).then(async function (message){
             await message.react('🍆');
             await message.react('💦');
+
+            var options = {encoding: 'utf-8', flag: 'w'};
+            fs.writeFileSync('./messageIDs/lfgMessageId.txt', message.id, options);
         })
-
-        client.on('messageReactionAdd', async (reaction, user) => {
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (!reaction.message.guild) return;
-        
-            if (reaction.message.channel.id == lfgChan.id) {
-                if (reaction.emoji.name === '🍆'){
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(pavlovRole.id);
-                }else if (reaction.emoji.name === '💦') {
-                    await reaction.message.guild.members.cache.get(user.id).roles.add(pop1Role.id);
-                }else {
-                    await reaction.remove();
-                }
-            }
-        });
-
-        client.on('messageReactionRemove', async (reaction, user) => {
-            if (reaction.message.partial) await reaction.message.fetch();
-            if (reaction.partial) await reaction.fetch();
-            if (!reaction.message.guild) return;
-            if (reaction.message.channel.id == lfgChan.id) {
-                if (reaction.emoji.name === '🍆'){
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(pavlovRole.id);
-                } else if (reaction.emoji.name === '💦') {
-                    await reaction.message.guild.members.cache.get(user.id).roles.remove(pop1Role.id);
-                }
-            }
-        });
     }
 }
