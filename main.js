@@ -246,49 +246,59 @@ client.on("messageReactionAdd", async (reaction, user) => {
         var check = await checkSignUp(user);
         if (reaction.count > 1 && check < 1) { // Stacking emojis
             if (!reaction._emoji.id) {
-                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
             } else {
-                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
             }
             await client.command.get('directmessage').execute(user);
-        } 
-        if (check > 0) {
+        }else if (check > 0){
             if (!reaction._emoji.id){
-                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
             } else{
-                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
             }
             
             await client.command.get('uniqueemojidirectmessage').execute(user);
-            stream.write(user.id + "\n");
-
-        }else {
-            stream.write(user.id + "\n");
+        }else{
+            await stream.write(user.id + "\n");
+            console.log(user.id + ' ' + user.username + ' has signed up');
         }
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId) {
         var check = await checkSignUp(user);
         if (reaction.count > 1 && check < 1) {
             if (!reaction._emoji.id){
-                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
             } else{
-                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
             }
             await client.command.get('directmessage').execute(user);
-        } 
-        if (check > 0) {
+        } else if (check > 0) {
             if (!reaction._emoji.id){
-                await reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
             } else{
-                await reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                await stream.write(user.id + "\n");
+                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
             }
             await client.command.get('uniqueemojidirectmessage').execute(user);
-            stream.write(user.id + "\n");
-
         } else{
             stream.write(user.id + "\n");
+            console.log(user.id + ' ' + user.username + ' has signed up');
         }
-    } else {
-        return;
     }
 })
 
@@ -329,14 +339,12 @@ client.on("messageReactionRemove", async (reaction, user) => {
         }
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId){
 
-        client.command.get('removesignupid').execute(user, reaction);
+        await client.command.get('removesignupid').execute(user);
 
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId){
+        
+        await client.command.get('removesignupid').execute(user);
 
-        client.command.get('removesignupid').execute(user, reaction);
-
-    } else {
-        return;
     }
 })
 
