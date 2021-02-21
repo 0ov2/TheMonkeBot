@@ -1,10 +1,10 @@
 const fs = require('fs');
 module.exports = {
     name: 'removesignupid',
-    async execute(user, reaction){
+    async execute(user){
         var optionsR = {encoding: 'utf-8', flag: 'r'};
 
-        fs.readFile('./messageIDs/dtfSignedUpIds.txt', optionsR, function(err, data) {
+        fs.readFile('./messageIDs/dtfSignedUpIds.txt', optionsR, async function(err, data) {
             let dataArray = data.split('\n');
 
             for (let i = 0; i < dataArray.length; i++) {
@@ -14,9 +14,9 @@ module.exports = {
             }
         
             const updatedData = dataArray.join('\n');
-            fs.writeFile('./messageIDs/dtfSignedUpIds.txt', updatedData, (err) => {
+            await fs.writeFile('./messageIDs/dtfSignedUpIds.txt', updatedData, (err) => {
                 if (err) throw err;
-                console.log('Successfully updated the file!');
+                console.log(user.id + ' ' + user.username + ' ID removed from signup');
             });
         });
     }
