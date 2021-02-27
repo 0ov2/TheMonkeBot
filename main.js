@@ -143,7 +143,7 @@ client.on('message', async (message) => { // manual commands
     } else if (command === 'lfg') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
             
-            client.command.get('lfgmessage').execute(client, Discord, getChannelId(client, 'lfg-role-claim'));
+            //client.command.get('lfgmessage').execute(client, Discord, getChannelId(client, 'lfg-role-claim'));
 
         }
     } else if (command === 'role') {
