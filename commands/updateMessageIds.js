@@ -40,13 +40,12 @@ async function updateMessageIds(client) {
     // Dream
     var DreamChan = await client.channels.cache.find(chan => chan.name == 'dt-availability');
     var DreamMessages = await DreamChan.messages.fetch();
-    var dtRole = getRole(client, 'dream');
-    var DreamAvMessage = DreamMessages.find(msg => msg.content.includes(dtRole.id) && msg.author.bot == true);
+    var DreamAvMessage = DreamMessages.find(msg => msg.content.includes('A - Monday night') && msg.author.bot == true);
     fs.writeFileSync('./messageIDs/dtAvailabilityMessage.txt', DreamAvMessage.id, options);
 
-    var DreamMatchChan = await client.channels.cache.find(chan => chan.name == 'dt-match-announcements');
+    var DreamMatchChan = await client.channels.cache.find(chan => chan.name == 'dt-availability');
     var DreamMatchMessages = await DreamMatchChan.messages.fetch();
-    var DreamMatchMessage = DreamMatchMessages.find(msg => msg.content.includes(dtRole.id) && msg.author.bot == true);
+    var DreamMatchMessage = DreamMatchMessages.find(msg => msg.content.includes(`vs OP`) && msg.author.bot == true);
     fs.writeFileSync('./messageIDs/dtMatchAnnouncementID.txt', DreamMatchMessage.id, options);
 
     // OP

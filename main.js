@@ -52,6 +52,19 @@ client.once('ready', () => { // automatic commands
     })
 
     // NA
+    schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
+        console.log('monke do availability');
+        try {
+
+            client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
+
+        } catch (error) {
+            console.log(error);
+        }
+
+        console.log('monke done. *monke noises*');
+    })
+
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         console.log('monke do availability');
         try {
@@ -60,7 +73,6 @@ client.once('ready', () => { // automatic commands
             
             client.command.get('dtAutoAvailability').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream')); 
             client.command.get('biAutoAvailability').execute(client, getChannelId(client, 'bi-availability'), getRole(client, 'bi'));
-            client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-match-announcements'), getRole(client, 'dream'));
     
         } catch (error) {
             console.log(error);
@@ -109,7 +121,6 @@ client.on('message', async (message) => { // manual commands
             var dtAvailabilityId = getChannelId(client, 'dt-availability');
             var biAvailabilityId = getChannelId(client, 'bi-availability');
             var opMatchAnnouncement = getChannelId(client, 'op-match-announcements');
-            var dtMatchAnnouncement = getChannelId(client, 'dt-match-announcements');
 
             if (message.channel.id === opAvailabilityId.id) {
                 client.command.get('autoAvailability').execute(client, opAvailabilityId, opRole.id);
@@ -120,8 +131,6 @@ client.on('message', async (message) => { // manual commands
                 client.command.get('biAutoAvailability').execute(client, biAvailabilityId, biRole.id);
             }else if (message.channel.id === opMatchAnnouncement.id) {
                 client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement, opRole.id);
-            }else if (message.channel.id === dtMatchAnnouncement.id) {
-                client.command.get('dtMatchAnnouncement').execute(client, dtMatchAnnouncement, dreamRole.id);
             }else {
                 return;
             }
@@ -190,7 +199,6 @@ client.on("messageReactionAdd", async (reaction, user) => {
     var dtChanId = getChannelId(client, 'dt-availability');
     var biChanId = getChannelId(client, 'bi-availability');
     var opMatchChanId = getChannelId(client, 'op-match-announcements');
-    var dtMatchChanId = getChannelId(client, 'dt-match-announcements');
     var lfgChan = getChannelId(client, 'lfg-role-claim');
     
     var options = {encoding: 'utf-8', flag: 'r'};
@@ -238,7 +246,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
         await client.command.get('countreactions').execute(reaction, user, 'opmatch');
 
-    } else if (reaction.message.channel.id === dtMatchChanId.id && reaction.message.id == dtMatchMessageId) {
+    } else if (reaction.message.channel.id === dtChanId.id && reaction.message.id == dtMatchMessageId) {
 
         await client.command.get('countreactions').execute(reaction, user, 'dtmatch');
 
