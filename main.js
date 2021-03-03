@@ -52,18 +52,18 @@ client.once('ready', () => { // automatic commands
     })
 
     // NA
-    schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
-        console.log('monke do availability');
-        try {
+    // schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
+    //     console.log('monke do availability');
+    //     try {
 
-            client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
+    //         client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
 
-        } catch (error) {
-            console.log(error);
-        }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
 
-        console.log('monke done. *monke noises*');
-    })
+    //     console.log('monke done. *monke noises*');
+    // })
 
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         console.log('monke do availability');
