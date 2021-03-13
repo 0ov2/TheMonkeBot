@@ -6,6 +6,8 @@ const prefix = '-';
 
 const fs = require('fs');
 
+const spacetime = require('spacetime');
+
 var getChannelId = require("./commands/getChannelId");
 
 var getRole = require("./commands/getRole");
@@ -52,18 +54,18 @@ client.once('ready', () => { // automatic commands
     })
 
     // NA
-    // schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
-    //     console.log('monke do availability');
-    //     try {
+    schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
+        console.log('monke do availability');
+        try {
 
-    //         client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
+            client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
 
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
+        } catch (error) {
+            console.log(error);
+        }
 
-    //     console.log('monke done. *monke noises*');
-    // })
+        console.log('monke done. *monke noises*');
+    })
 
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         console.log('monke do availability');
@@ -187,7 +189,7 @@ client.on('message', async (message) => { // manual commands
         if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
             
             var chan = getChannelId(client, 'monke-bot');
-            client.command.get('dtfchecksignedup').execute(message, chan, client);
+            await client.command.get('dtfchecksignedup').execute(chan, client);
 
         }
     }
@@ -353,6 +355,56 @@ client.on("messageReactionRemove", async (reaction, user) => {
         
         await client.command.get('removesignupid').execute(user);
 
+    }
+})
+
+// log deleted messages
+client.on("messageDelete", async (messageDel) => {
+
+    var chan = getChannelId(client, 'monke-deleted-messages');
+
+    await Discord.Util.delayFor(100);
+
+    if (!messageDel.partial){
+        const fetchedLogs = await messageDel.guild.fetchAuditLogs({
+            limit: 6,
+            type: 'MESSAGE_DELETE'
+        }).catch(() => ({
+            entries: []
+        }));
+        
+        const auditEntry = fetchedLogs.entries.find(a =>
+        a.target.id === messageDel.author.id &&
+        Date.now() - a.createdTimestamp < 20000
+        );
+    
+        const executor = auditEntry ? auditEntry.executor.tag : messageDel.author.tag;
+
+        // times
+        var creationsDateEu = spacetime(messageDel.createdAt);
+        var creationsDateEuFormat = creationsDateEu.unixFmt('yyyy.MM.dd h:mm a');
+        var creationsDateNa = spacetime(messageDel.createdAt).goto('America/New_York');
+        var creationsDateNaFormat = creationsDateNa.unixFmt('yyyy.MM.dd h:mm a');
+
+        var timeStampEu = spacetime.now('Europe/London');
+        var euDate = timeStampEu.unixFmt('yyyy.MM.dd h:mm a');
+        var timeStampNa = spacetime.now('America/New_York');
+        var naDate = timeStampNa.unixFmt('yyyy.MM.dd h:mm a');
+
+        var deletedEmbed = new Discord.MessageEmbed()
+        .setTitle('DELETED MESSAGE')
+        .setColor("ORANGE")
+        .addField('Message', messageDel.content)
+        .addField('Sent by', messageDel.author.username)
+        .addField('Deleted by', executor)
+        .addField('Creation and deletion', '**UTC**' + '\n' 
+        + `C - ${creationsDateEuFormat}` + '\n'
+        + `D - ${euDate}` + '\n'
+        + '**EST**' + '\n'
+        + `C - ${creationsDateNaFormat}` + '\n'
+        + `D - ${naDate}`)
+    
+        client.channels.cache.get(chan.id).send(deletedEmbed);
     }
 })
 
