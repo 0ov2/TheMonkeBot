@@ -192,6 +192,13 @@ client.on('message', async (message) => { // manual commands
             await client.command.get('dtfchecksignedup').execute(chan, client);
 
         }
+    } else if (command === 'remupdate') {
+        if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
+            
+            var chan = getChannelId(client, 'monke-bot');
+            await client.command.get('managesignups').execute(args, message, client, 'update');
+
+        }
     }
 })
 
@@ -381,13 +388,9 @@ client.on("messageDelete", async (messageDel) => {
         const executor = auditEntry ? auditEntry.executor.tag : messageDel.author.tag;
 
         // times
-        var creationsDateEu = spacetime(messageDel.createdAt);
-        var creationsDateEuFormat = creationsDateEu.unixFmt('yyyy.MM.dd h:mm a');
         var creationsDateNa = spacetime(messageDel.createdAt).goto('America/New_York');
         var creationsDateNaFormat = creationsDateNa.unixFmt('yyyy.MM.dd h:mm a');
 
-        var timeStampEu = spacetime.now('Europe/London');
-        var euDate = timeStampEu.unixFmt('yyyy.MM.dd h:mm a');
         var timeStampNa = spacetime.now('America/New_York');
         var naDate = timeStampNa.unixFmt('yyyy.MM.dd h:mm a');
 
@@ -395,12 +398,10 @@ client.on("messageDelete", async (messageDel) => {
         .setTitle('DELETED MESSAGE')
         .setColor("ORANGE")
         .addField('Message', messageDel.content)
+        .addField('Channel', messageDel.channel.name)
         .addField('Sent by', messageDel.author.username)
         .addField('Deleted by', executor)
-        .addField('Creation and deletion', '**UTC**' + '\n' 
-        + `C - ${creationsDateEuFormat}` + '\n'
-        + `D - ${euDate}` + '\n'
-        + '**EST**' + '\n'
+        .addField('Creation and deletion', '**EST**' + '\n'
         + `C - ${creationsDateNaFormat}` + '\n'
         + `D - ${naDate}`)
     
