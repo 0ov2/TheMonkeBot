@@ -30,12 +30,14 @@ for (const file of commandFiles){
     client.command.set(command.name, command);
 }
 
-client.once('ready', () => { // automatic commands
+client.once('ready', async () => { // automatic commands
     console.log('monke');
 
     updateMessageIds(client);
 
     var monkeChan = getChannelId(client, 'monke-bot');
+
+    await client.command.get('managesignups').execute('', '', client, 'update');
 
     // Availability
     // EU
@@ -195,7 +197,6 @@ client.on('message', async (message) => { // manual commands
     } else if (command === 'remupdate') {
         if (message.author.bot || message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
             
-            var chan = getChannelId(client, 'monke-bot');
             await client.command.get('managesignups').execute(args, message, client, 'update');
 
         }
@@ -259,7 +260,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
         await client.command.get('countreactions').execute(reaction, user, 'dtmatch');
 
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId) {
+    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId || reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId) {
         var check = await checkSignUp(user);
         if (reaction.count > 1 && check < 1) { // Stacking emojis
             if (!reaction._emoji.id) {
@@ -271,6 +272,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
                 reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
                 console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
             }
+
             await client.command.get('directmessage').execute(user);
         }else if (check > 0){
             if (!reaction._emoji.id){
@@ -286,34 +288,6 @@ client.on("messageReactionAdd", async (reaction, user) => {
             await client.command.get('uniqueemojidirectmessage').execute(user);
         }else{
             await stream.write(user.id + "\n");
-            console.log(user.id + ' ' + user.username + ' has signed up');
-        }
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId) {
-        var check = await checkSignUp(user);
-        if (reaction.count > 1 && check < 1) {
-            if (!reaction._emoji.id){
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
-            } else{
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
-            }
-            await client.command.get('directmessage').execute(user);
-        } else if (check > 0) {
-            if (!reaction._emoji.id){
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
-            } else{
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
-            }
-            await client.command.get('uniqueemojidirectmessage').execute(user);
-        } else{
-            stream.write(user.id + "\n");
             console.log(user.id + ' ' + user.username + ' has signed up');
         }
     }

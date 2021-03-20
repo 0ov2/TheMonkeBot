@@ -25,15 +25,19 @@ module.exports = {
                     }
                 }
             }
-
-            if(usersNotFound.toString() == ""){
-                chan.send(users.toString() + " ");
-            }else {
-                chan.send('Users not found:' + '\n');
-                chan.send(usersNotFound.toString() + " ");
-                chan.send('Users found:' + '\n');
-                chan.send(users.toString() + " ");
+            if (users.length > 0){
+                if(usersNotFound.toString() == ""){
+                    chan.send(users.toString() + ` Total: ${users.length.toString()}`);
+                }else {
+                    chan.send('Users not found:' + '\n');
+                    chan.send(usersNotFound.toString() + " ");
+                    chan.send('Users found:' + '\n');
+                    chan.send(users.toString() + " ");
+                }
+            } else {
+                chan.send('No one is signed up!');
             }
+            
         });
     }
 }
