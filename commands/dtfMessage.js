@@ -4,8 +4,8 @@ const fs = require('fs');
 
 var d = spacetime.now('Europe/London');
 var s = d.add(6, 'day');
-var time = getTime(4);
-var newDate = ` Saturday ${s.format('{date-pad}')} ${s.format('month')} at 21 UTC / ${time} EST`;
+// var time = getTime(4);
+var newDate = ` Saturday ${s.format('{date-pad}')} ${s.format('month')} at 20 UTC / 4pm EST`;
 
 const getRole = require('./getRole');
 const getChan = require('./getChannelId');
