@@ -86,7 +86,7 @@ client.once('ready', async () => { // automatic commands
     })
 
     // auto Mixed friendly
-    schedule.scheduleJob('0 20 * * 6', () => { //30 19 * * 6 - real time
+    schedule.scheduleJob('59 18 * * 6', () => { //30 19 * * 6 - real time
         monkeChan.send("-dtf");
     })
     schedule.scheduleJob('0 2 * * 0', () => { //0 23 * * 6
@@ -95,9 +95,9 @@ client.once('ready', async () => { // automatic commands
     schedule.scheduleJob('30 18 * * 0', () => { //
         monkeChan.send("-role");
     })
-    // schedule.scheduleJob('1 20 * * 6', () => { //30 19 * * 6 - real time
-    //     monkeChan.send("-rem");
-    // })
+    schedule.scheduleJob('0 19 * * 6', () => { //30 19 * * 6 - real time
+        monkeChan.send("-rem");
+    })
 })
 
 client.on('message', async (message) => { // manual commands
@@ -130,6 +130,7 @@ client.on('message', async (message) => { // manual commands
                 client.command.get('autoAvailability').execute(client, opAvailabilityId, opRole.id);
             }else if (message.channel.id === dtAvailabilityId.id) {
                 client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId, dreamRole.id);
+                client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
             }else if (message.channel.id === biAvailabilityId.id) {
                 stream.write("");
                 client.command.get('biAutoAvailability').execute(client, biAvailabilityId, biRole.id);
