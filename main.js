@@ -86,7 +86,7 @@ client.once('ready', async () => { // automatic commands
     })
 
     // auto Mixed friendly
-    schedule.scheduleJob('59 18 * * 6', () => { //30 19 * * 6 - real time
+    schedule.scheduleJob('59 19 * * 6', () => { //30 19 * * 6 - real time
         monkeChan.send("-dtf");
     })
     schedule.scheduleJob('0 2 * * 0', () => { //0 23 * * 6
@@ -95,7 +95,7 @@ client.once('ready', async () => { // automatic commands
     schedule.scheduleJob('30 18 * * 0', () => { //
         monkeChan.send("-role");
     })
-    schedule.scheduleJob('0 19 * * 6', () => { //30 19 * * 6 - real time
+    schedule.scheduleJob('0 20 * * 6', () => { //30 19 * * 6 - real time
         monkeChan.send("-rem");
     })
 })
