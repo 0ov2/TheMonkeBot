@@ -76,7 +76,7 @@ client.once('ready', async () => { // automatic commands
             fs.writeFileSync('./messageIDs/biAvailabilityMessageIds.txt', "", options);
             
             client.command.get('dtAutoAvailability').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream')); 
-            client.command.get('biAutoAvailability').execute(client, getChannelId(client, 'bi-availability'), getRole(client, 'bi'));
+            client.command.get('hoAutoAvailability').execute(client, getChannelId(client, 'ho-availability'), getRole(client, 'ho'));
     
         } catch (error) {
             console.log(error);
@@ -111,7 +111,7 @@ client.on('message', async (message) => { // manual commands
     const monkeRole = getRole(client, 'Monke');
     const opRole = getRole(client, 'op');
     const dreamRole = getRole(client, 'dream');
-    const biRole = getRole(client, 'bi');
+    const hoRole = getRole(client, 'ho');
 
     if (command === 'slow') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)) { 
@@ -123,7 +123,7 @@ client.on('message', async (message) => { // manual commands
 
             var opAvailabilityId = getChannelId(client, 'op-availability');
             var dtAvailabilityId = getChannelId(client, 'dt-availability');
-            var biAvailabilityId = getChannelId(client, 'bi-availability');
+            var biAvailabilityId = getChannelId(client, 'ho-availability');
             var opMatchAnnouncement = getChannelId(client, 'op-match-announcements');
 
             if (message.channel.id === opAvailabilityId.id) {
@@ -133,7 +133,7 @@ client.on('message', async (message) => { // manual commands
                 client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
             }else if (message.channel.id === biAvailabilityId.id) {
                 stream.write("");
-                client.command.get('biAutoAvailability').execute(client, biAvailabilityId, biRole.id);
+                client.command.get('hoAutoAvailability').execute(client, biAvailabilityId, hoRole.id);
             }else if (message.channel.id === opMatchAnnouncement.id) {
                 client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement, opRole.id);
             }else {
@@ -208,7 +208,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
     var dtfChanId = getChannelId(client, 'dream-teams-friendly');
     var opChanId = getChannelId(client, 'op-availability');
     var dtChanId = getChannelId(client, 'dt-availability');
-    var biChanId = getChannelId(client, 'bi-availability');
+    var hoChanId = getChannelId(client, 'ho-availability');
     var opMatchChanId = getChannelId(client, 'op-match-announcements');
     var lfgChan = getChannelId(client, 'lfg-role-claim');
     
@@ -249,9 +249,9 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
         await client.command.get('countreactions').execute(reaction, user, 'dt');
 
-    } else if (reaction.message.channel.id === biChanId.id && checkBi > 0 && user.bot == false) {
+    } else if (reaction.message.channel.id === hoChanId.id && checkBi > 0 && user.bot == false) {
 
-        await client.command.get('countreactions').execute(reaction, user, 'bi');
+        await client.command.get('countreactions').execute(reaction, user, 'ho');
 
     } else if (reaction.message.channel.id === opMatchChanId.id && reaction.message.id == opMatchMessageId) {
 
