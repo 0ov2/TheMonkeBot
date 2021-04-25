@@ -19,7 +19,7 @@ async function updateMessageIds(client) {
 
     //Team av
     // BI
-    var BiChan = await client.channels.cache.find(chan => chan.name == 'ho-availability');
+    var BiChan = await client.channels.cache.find(chan => chan.name == 'octane-availability');
     var BiMessages = await BiChan.messages.fetch();
     var BiAvMessageSun = BiMessages.find(msg => msg.content.includes('Sunday') && msg.author.bot == true);
     var BiAvMessageSat = BiMessages.find(msg => msg.content.includes('Saturday') && msg.author.bot == true);
