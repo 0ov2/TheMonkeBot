@@ -19,7 +19,7 @@ module.exports = {
                 await reaction.message.reactions.resolve(reaction.emoji.name).users.remove(user.bot.id);
             }
             
-        } else if (team == 'ho') {
+        } else if (team == 'octane') {
 
             var count = await reaction.message.reactions.cache.get(reaction.emoji.name).count;
 
