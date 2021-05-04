@@ -33,12 +33,12 @@ for (const file of commandFiles){
 }
 
 client.once('ready', async () => { // automatic commands
+    const monkeChan = getChannelId(client, 'monke-bot');
+    const logChan = getChannelId(client, 'dt-logs');
+    monkeChan.send('Monke online');
     console.log('monke');
 
     updateMessageIds(client);
-
-    const monkeChan = getChannelId(client, 'monke-bot');
-    const logChan = getChannelId(client, 'dt-logs');
 
     await client.command.get('managesignups').execute('', '', client, 'update');
 
@@ -134,30 +134,39 @@ client.on('message', async (message) => { // manual commands
             var opAvailabilityId = getChannelId(client, 'op-availability');
             var dtAvailabilityId = getChannelId(client, 'dt-availability');
             var octaneAvailabilityId = getChannelId(client, 'octane-availability');
-            var opMatchAnnouncement = getChannelId(client, 'op-match-announcements');
 
             if (message.channel.id === opAvailabilityId.id) {
                 client.command.get('autoAvailability').execute(client, opAvailabilityId, opRole.id);
             }else if (message.channel.id === dtAvailabilityId.id) {
                 client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId, dreamRole.id);
-                client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
                 // new log
                 var logDate = spacetime(spacetime.now).goto('America/New_York');
                 logChan.send(`**A new week ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
-                logChan.send(`**New match announcement ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
 
             }else if (message.channel.id === octaneAvailabilityId.id) {
                 stream.write("");
                 client.command.get('octaneAutoAvailability').execute(client, octaneAvailabilityId, octaneRole.id);
-            }else if (message.channel.id === opMatchAnnouncement.id) {
-                client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement, opRole.id);
             }else {
                 return;
             }
             
             message.delete();
         }
-    } else if (command === 'dtf') {
+    } else if (command === 'avmatch'){
+        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
+            var dtAvailabilityId = getChannelId(client, 'dt-availability');
+            var opMatchAnnouncement = getChannelId(client, 'op-match-announcements');
+            if (message.channel.id === dtAvailabilityId.id){
+                client.command.get('dtMatchAnnouncement').execute(client, dtAvailabilityId, dreamRole.id);
+                //new log
+                var logDate = spacetime(spacetime.now).goto('America/New_York');
+                logChan.send(`**New match announcement ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
+
+            } else if (message.channel.id === opMatchAnnouncement.id){
+                client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement, opRole.id);
+            }
+        }
+    }else if (command === 'dtf') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
            
             client.command.get('createmxfchannels').execute(message);
@@ -261,13 +270,6 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
         await client.command.get('countreactions').execute(reaction, user, 'op');
 
-    } else if (reaction.message.channel.id === dtChanId.id && reaction.message.id == dtMessageId) {
-
-        await client.command.get('countreactions').execute(reaction, user, 'dt');
-        // new log
-        var logDate = spacetime(spacetime.now).goto('America/New_York');
-        logChan.send(`**AV** ${user.username} Added their reaction to ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-
     } else if (reaction.message.channel.id === octaneChanId.id && checkBi > 0 && user.bot == false) {
 
         await client.command.get('countreactions').execute(reaction, user, 'octane');
@@ -276,12 +278,21 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
         await client.command.get('countreactions').execute(reaction, user, 'opmatch');
 
-    } else if (reaction.message.channel.id === dtChanId.id && reaction.message.id == dtMatchMessageId) {
-
-        await client.command.get('countreactions').execute(reaction, user, 'dtmatch');
-        // new log
+    } else if (reaction.message.channel.id === dtChanId.id) { // DT
         var logDate = spacetime(spacetime.now).goto('America/New_York');
-        logChan.send(`**MATCH** ${user.username} Added their reaction to MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+
+        if (reaction.message.id == dtMatchMessageId) {
+            await client.command.get('countreactions').execute(reaction, user, 'dtmatch');
+            // new log
+            logChan.send(`**MATCH** ${user.username} Added their reaction to MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+        } else if (reaction.message.id == dtMessageId) {
+            await client.command.get('countreactions').execute(reaction, user, 'dt');
+            // new log
+            logChan.send(`**AV** ${user.username} Added their reaction to ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+        } else if (reaction.message.id !== dtMatchMessageId && reaction.message.id !== dtMessageId) {
+            // new log
+            logChan.send(`**CUSTOM** ${user.username} Added their reaction ${reaction.emoji.name} to ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+        }
 
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId || reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId) {
         var check = await checkSignUp(user);
@@ -328,8 +339,8 @@ client.on("messageReactionRemove", async (reaction, user) => {
     var lfgMessageId = fs.readFileSync('./messageIDs/lfgMessageId.txt', optionsR);
     var euDtfMessageId = fs.readFileSync('./messageIDs/euDtfMessageId.txt', optionsR);
     var naDtfMessageId = fs.readFileSync('./messageIDs/naDtfMessageId.txt', optionsR);
-    var dtMessageId = fs.readFileSync('./messageIDs/dtAvailabilityMessage.txt', options);
-    var dtMatchMessageId = fs.readFileSync('./messageIDs/dtMatchAnnouncementID.txt', options);
+    var dtMessageId = fs.readFileSync('./messageIDs/dtAvailabilityMessage.txt', optionsR);
+    var dtMatchMessageId = fs.readFileSync('./messageIDs/dtMatchAnnouncementID.txt', optionsR);
 
     var messageId = fs.readFileSync('./messageIDs/roleClaimMessage.txt', optionsR);
 
@@ -363,18 +374,19 @@ client.on("messageReactionRemove", async (reaction, user) => {
         
         await client.command.get('removesignupid').execute(user);
 
-    } else if (reaction.message.channel.id === dtChanId.id && reaction.message.id == dtMessageId) {
-
-        // new log
+    } else if (reaction.message.channel.id === dtChanId.id) {
         var logDate = spacetime(spacetime.now).goto('America/New_York');
-        var options = {encoding: 'utf-8', flag: 'a'};
-        logChan.send(`**AV** ${user.username} Removed their reaction from ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-    } else if (reaction.message.channel.id === dtChanId.id && reaction.message.id == dtMatchMessageId) {
 
-        // new log
-        var logDate = spacetime(spacetime.now).goto('America/New_York');
-        var options = {encoding: 'utf-8', flag: 'a'};
-        logChan.send(`**MATCH** ${user.username} Removed their reaction from MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+        if (reaction.message.id == dtMessageId) {
+            // new log
+            logChan.send(`**AV** ${user.username} Removed their reaction from ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+        } else if (reaction.message.id == dtMatchMessageId) {
+            // new log
+            logChan.send(`**MATCH** ${user.username} Removed their reaction from MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+        } else if (reaction.message.id !== dtMatchMessageId && reaction.message.id !== dtMessageId) {
+            // new log
+            logChan.send(`**CUSTOM** ${user.username} Removed their reaction ${reaction.emoji.name} from ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+        }
     }
 })
 
