@@ -105,7 +105,7 @@ client.once('ready', async () => { // automatic commands
         monkeChan.send("-role");
     })
     schedule.scheduleJob('0 19 * * 6', () => { //30 19 * * 6 - real time
-        // monkeChan.send("-rem");
+        monkeChan.send("-rem");
     })
 })
 
@@ -170,7 +170,7 @@ client.on('message', async (message) => { // manual commands
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
            
             client.command.get('createmxfchannels').execute(message);
-
+            await client.command.get('managesignups').execute(args, message, client, 'update');
         }
     } else if (command === 'dtfdel') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
@@ -194,8 +194,9 @@ client.on('message', async (message) => { // manual commands
             stream.write("");
         }
     } else if (command === 'rem') {
+
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-           
+                    
             var chan = getChannelId(client, 'dream-teams-friendly');
             client.command.get('dtfreminder').execute(client, chan);
 
