@@ -1,18 +1,16 @@
 const spacetime = require('spacetime');
-const getTime = require('./getMatchTime');
+//const getTime = require('./getMatchTime');
 const fs = require('fs');
-
-var d = spacetime.now('Europe/London');
-var s = d.add(6, 'day');
-// var time = getTime(4);
-var newDate = ` Saturday ${s.format('{date-pad}')} ${s.format('month')} at 20 UTC / 4pm EST`;
-
 const getRole = require('./getRole');
 const getChan = require('./getChannelId');
 
 module.exports = {
     name: 'dtfmessage',
     async execute(client, message){
+        var d = spacetime.now('Europe/London');
+        var s = d.add(6, 'day');
+        // var time = getTime(4);
+        var newDate = ` Saturday ${s.format('{date-pad}')} ${s.format('month')} at 20 UTC / 4pm EST`;
         
         const dtfRole = getRole(client, 'dtf', message);
         const dftChan = getChan(client, 'dream-teams-friendly');
