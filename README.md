@@ -4,6 +4,7 @@ Welcome to MonkeBot. Monkebot is here to help with availability, scheduling and 
 Examples:
 
 Here is the code for weekly availability that the bot posts every sunday, with an example of the output that users will see
+
 ![weeklyav](https://user-images.githubusercontent.com/28069668/120331780-09589900-c2e6-11eb-84ae-aef962b87d7f.PNG)
 ![weeklyavoutput](https://user-images.githubusercontent.com/28069668/120332004-3a38ce00-c2e6-11eb-95e8-6dc6ec10d268.PNG)
 
