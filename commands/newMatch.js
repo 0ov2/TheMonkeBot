@@ -1,6 +1,6 @@
 module.exports = {
     name: 'newmatch',
-    async execute(args, message, chan, opRole, client) {
+    async execute(args, chan, opRole, client) {
         const spacetime = require('spacetime');
         var s = spacetime.now('Europe/London');
         var dateConetents = [];
@@ -58,7 +58,7 @@ module.exports = {
         for (let i = 0; i < dateConetents.length; i++) {
             newDate = newDate + dateConetents[i] + ' ';
         }
-        message.delete();
+        
         client.channels.cache.get(chan.id).send("<@&" + opRole + "> " + newDate)
     }
 }
