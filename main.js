@@ -235,8 +235,8 @@ client.on('message', async (message) => { // manual commands
                 
             }
         }
-    } else if (command === 'm' && message.channel === getChannelId(client, 'op-match-announcements') && message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
-        await client.command.get('newmatch').execute(args, message, getChannelId(client, 'op-match-announcements'), opRole.id, client); // creates new match announcement
+    } else if (command === 'm' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
+        await client.command.get('newmatch').execute(args, getChannelId(client, 'op-match-announcements'), opRole.id, client); // creates new match announcement
     }
 })
 
