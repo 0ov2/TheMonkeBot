@@ -1,6 +1,6 @@
 module.exports = {
     name: 'newmatch',
-    async execute(args, chan, opRole, client) {
+    async execute(args, chan, opRole, client, edit, selectedMessage, message) {
         const spacetime = require('spacetime');
         var s = spacetime.now('Europe/London');
         var dateConetents = [];
@@ -27,20 +27,26 @@ module.exports = {
             }else if (args[0] === 'sun'){
                 var day = s.day('sunday');
                 dateConetents.push(`Sunday ${day.format('{date-pad}')} ${day.format('month')}, `);
+            } else{
+                message.react('❌');
+                return;
             }
         } else{
+            message.react('❌');
             return;
         }
 
-        if (args[1]){
+        if (args[1] && parseInt(args[1], 10)){
             dateConetents.push(args[1] + ' UTC');
         }else{
+            message.react('❌');
             return;
         }
 
         if (args[2]){
             dateConetents.push('vs ' + args[2]);
         } else{
+            message.react('❌');
             return;
         }
 
@@ -51,6 +57,7 @@ module.exports = {
                 dateConetents.push('**Scrim**');
             }
         }else{
+            message.react('❌');
             return;
         }
 
@@ -59,6 +66,12 @@ module.exports = {
             newDate = newDate + dateConetents[i] + ' ';
         }
         
-        client.channels.cache.get(chan.id).send("<@&" + opRole + "> " + newDate)
+        if (!edit){
+            client.channels.cache.get(chan.id).send("<@&" + opRole + "> " + newDate)
+            message.react('✅');
+        }else {
+            selectedMessage.edit("<@&" + opRole + "> " + newDate);
+            message.react('✅');
+        }
     }
 }
