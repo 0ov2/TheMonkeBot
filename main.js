@@ -236,7 +236,18 @@ client.on('message', async (message) => { // manual commands
             }
         }
     } else if (command === 'm' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
-        await client.command.get('newmatch').execute(args, getChannelId(client, 'op-match-announcements'), opRole.id, client); // creates new match announcement
+        await client.command.get('newmatch').execute(args, getChannelId(client, 'op-match-announcements'), opRole.id, client, '', '', message); // creates new match announcement
+    } else if (command === 'mdel' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
+        var chan = await getChannelId(client, 'op-match-announcements');
+        var messages = await chan.messages.fetch();
+        var selectedMessage = await messages.find(msg => msg.id == args);
+        await selectedMessage.delete();
+    } else if (command === 'medit' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
+        var chan = await getChannelId(client, 'op-match-announcements');
+        var messages = await chan.messages.fetch();
+        var selectedMessage = await messages.find(msg => msg.id == args[0]);
+        args.splice(0, 1);
+        await client.command.get('newmatch').execute(args, getChannelId(client, 'op-match-announcements'), opRole.id, client, 'edit', selectedMessage, message);
     }
 })
 
