@@ -1,4 +1,3 @@
-const { execute } = require("./removeSignUpId");
 
 module.exports = {
     name: 'directmessage',

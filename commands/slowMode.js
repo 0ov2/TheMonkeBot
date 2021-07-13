@@ -1,5 +1,3 @@
-const commando = require('discord.js-commando')
-
 module.exports = {
     name: 'slowmode',
     execute(message, args) {

@@ -22,10 +22,6 @@ module.exports = {
             await message.react('🇬'),
             await message.react('🇭'),
             await message.react('🇮');
-
-        var options = {encoding: 'utf-8', flag: 'w'};
-        fs.writeFileSync('./messageIDs/dtAvailabilityMessage.txt', message.id, options);
-
         })
     }
 }

@@ -1,5 +1,4 @@
 const getChan = require('./getChannelId');
-const fs = require('fs');
 
 module.exports = {
     name: 'mixedFriendlyAnnouncement',
@@ -15,9 +14,6 @@ module.exports = {
        
         client.channels.cache.get(dftChan.id).send(embed).then(async function (message){
             await message.react('🦧');
-
-            var options = {encoding: 'utf-8', flag: 'w'};
-            fs.writeFileSync('./messageIDs/roleClaimMessage.txt', message.id, options);
         })
     }
 }
