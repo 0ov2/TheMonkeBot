@@ -204,7 +204,7 @@ client.on('message', async (message) => { // manual commands
     } else if (command === 'remupdate') { // updates signup list of current signed up individuels 
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
             
-            await client.command.get('managesignups').execute(args, message, client, 'update');
+            await client.command.get('managesignups').execute(client, 'update', isTesting);
             message.react('✅');
         }
     } else if (command === 'moveoct'){ // moves all users in the octane voice channel to fam-2 voice channel
