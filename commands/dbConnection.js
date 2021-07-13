@@ -25,10 +25,10 @@ module.exports = {
       } else{
 
         var connection=mysql.createConnection({
-          host: require(process.env.DB_HOST), //../DB_HOST
-          user: require(process.env.DB_USER),  //../DB_USER
-          password: require(process.env.DB_PASS), //../DB_PASS
-          database: require(process.env.DATABASE) //../DB_URL
+          host: process.env.db_host, //../DB_HOST  process.env.DB_HOST
+          user: process.env.db_user,  //../DB_USER  process.env.DB_USER
+          password: process.env.db_pass, //../DB_PASS  process.env.DB_PASS
+          database: process.env.database //../DB_URL  process.env.DATABASE
       });
       
       connection.connect(function(error){
