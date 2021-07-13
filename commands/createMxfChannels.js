@@ -8,42 +8,50 @@ module.exports = {
         await message.guild.channels.create('🔵 🇪 🇺 BLUE 1', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
 
         await message.guild.channels.create('🟥 🇪 🇺 RED 1', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
 
         await message.guild.channels.create('🔵 🇪 🇺 BLUE 2', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
 
         await message.guild.channels.create('🟥 🇪 🇺 RED 2', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
 
         //NA
         await message.guild.channels.create('🔵 🇳 🇦 BLUE 1', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
 
         await message.guild.channels.create('🟥 🇳 🇦 RED 1', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
 
         await message.guild.channels.create('🔵 🇳 🇦 BLUE 2', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
 
         await message.guild.channels.create('🟥 🇳 🇦 RED 2', {
             type: 'voice',
             parent: category,
+            userLimit: 99,
         })
     }
 }

@@ -165,7 +165,7 @@ client.on('message', async (message) => { // manual commands
     }else if (command === 'dtf') { // creates dtf voice channels
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
             client.command.get('createmxfchannels').execute(message);
-            await client.command.get('managesignups').execute(client, 'update');
+            await client.command.get('managesignups').execute(client, 'update', isTesting);
         }
     } else if (command === 'dtfdel') { // deletes dtf voice channels
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
