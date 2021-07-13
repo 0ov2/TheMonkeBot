@@ -1,5 +1,4 @@
 var GetMatchTime = require("./getMatchTime");
-var fs = require('fs');
 
 module.exports = {
     name: 'dtMatchAnnouncement',
@@ -8,9 +7,6 @@ module.exports = {
 
         await client.channels.cache.get(chanid.id).send("<@&" + dreamRole + ">" + ` Sunday 3pm vs OP`).then(async function (message){
             await message.react('👍');
-
-            var options = {encoding: 'utf-8', flag: 'w'};
-            await fs.writeFileSync('./messageIDs/dtMatchAnnouncementID.txt', message.id, options);
         })
     }
 }

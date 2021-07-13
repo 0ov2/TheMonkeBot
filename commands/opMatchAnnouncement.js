@@ -1,6 +1,4 @@
-var fs = require('fs');
 const spacetime = require('spacetime');
-
 
 module.exports = {
     name: 'opMatchAnnouncement',
@@ -12,9 +10,6 @@ module.exports = {
         
         client.channels.cache.get(chanid.id).send("<@&" + opRole + "> " + `${newDate}`).then(async function (message){
             await message.react('🦧');
-
-            var options = {encoding: 'utf-8', flag: 'w'};
-            await fs.writeFileSync('./messageIDs/opMatchAnnouncementID.txt', message.id, options);
         })
     }
 }

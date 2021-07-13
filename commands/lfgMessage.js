@@ -1,4 +1,3 @@
-const fs = require('fs');
 var getRole = require('./getRole');
 var getChannel = require('./getChannelId');
 module.exports = {
@@ -22,9 +21,6 @@ module.exports = {
         client.channels.cache.get(chan.id).send(embed).then(async function (message){
             await message.react('🍆');
             await message.react('💦');
-
-            var options = {encoding: 'utf-8', flag: 'w'};
-            fs.writeFileSync('./messageIDs/lfgMessageId.txt', message.id, options);
         })
     }
 }

@@ -1,6 +1,5 @@
 const spacetime = require('spacetime');
 //const getTime = require('./getMatchTime');
-const fs = require('fs');
 const getRole = require('./getRole');
 const getChan = require('./getChannelId');
 
@@ -15,16 +14,8 @@ module.exports = {
         const dtfRole = getRole(client, 'dtf', message);
         const dftChan = getChan(client, 'dream-teams-friendly');
 
-        client.channels.cache.get(dftChan.id).send("<@&" + dtfRole.id + ">" + ' 🇪 🇺' + newDate + '\n' + 'React with a single unique emoji ' + '**if you are an EU player!**').then(async function (Message) {
-            
-            var options = {encoding: 'utf-8', flag: 'w'};
-            fs.writeFileSync('./messageIDs/euDtfMessageId.txt', Message.id, options);
-        })
+        client.channels.cache.get(dftChan.id).send("<@&" + dtfRole.id + ">" + ':regional_indicator_e: :regional_indicator_u: ' + newDate + '\n' + 'React with a single unique emoji ' + '**if you are an EU player!**');
 
-        client.channels.cache.get(dftChan.id).send("<@&" + dtfRole.id + ">" + ' 🇳 🇦' + newDate + '\n' + 'React with a single unique emoji ' + '**if you are an NA player!**').then(async function (Message) {
-            
-            var options = {encoding: 'utf-8', flag: 'w'};
-            fs.writeFileSync('./messageIDs/naDtfMessageId.txt', Message.id, options);
-        })
+        client.channels.cache.get(dftChan.id).send("<@&" + dtfRole.id + ">" + ':regional_indicator_n: :regional_indicator_a:' + newDate + '\n' + 'React with a single unique emoji ' + '**if you are an NA player!**');
     }
 }

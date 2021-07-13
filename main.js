@@ -10,17 +10,15 @@ const spacetime = require('spacetime');
 
 var getChannelId = require("./commands/getChannelId");
 
+var GetMessageId = require("./commands/getMessageId");
+
 var getRole = require("./commands/getRole");
-
-var checkSignUp = require("./commands/checkSignUp");
-
-var updateMessageIds = require("./commands/updateMessageIds");
-
-var checkBiMessageId = require("./commands/checkBiMessageId");
 
 var checkEmoji = require("./commands/checkEmoji");
 
 var schedule = require('node-schedule');
+
+var isTesting = false;
 
 client.command = new Discord.Collection();
 
@@ -38,9 +36,7 @@ client.once('ready', async () => { // automatic commands
     monkeChan.send('Monke online'); // ready message
     console.log('monke');
 
-    updateMessageIds(client); // update message ID's for important messages 
-
-    await client.command.get('managesignups').execute('', '', client, 'update'); // update DTF signups
+    await client.command.get('managesignups').execute(client, 'update', isTesting); // update DTF signups
 
     // Availability
     // EU
@@ -95,16 +91,16 @@ client.once('ready', async () => { // automatic commands
     })
 
     // auto Mixed friendly
-    schedule.scheduleJob('59 18 * * 6', () => { //30 19 * * 6 - real time
+    schedule.scheduleJob('59 18 * * 6', () => { //
         monkeChan.send("-dtf");
     })
-    schedule.scheduleJob('0 1 * * 0', () => { //0 23 * * 6
+    schedule.scheduleJob('0 1 * * 0', () => { //
         monkeChan.send("-dtfdel");
     })
     schedule.scheduleJob('30 18 * * 0', () => { //
         monkeChan.send("-role");
     })
-    schedule.scheduleJob('0 19 * * 6', () => { //30 19 * * 6 - real time
+    schedule.scheduleJob('0 19 * * 6', () => { //
         monkeChan.send("-rem");
     })
 })
@@ -168,9 +164,8 @@ client.on('message', async (message) => { // manual commands
         }
     }else if (command === 'dtf') { // creates dtf voice channels
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
-           
             client.command.get('createmxfchannels').execute(message);
-            await client.command.get('managesignups').execute(args, message, client, 'update');
+            await client.command.get('managesignups').execute(client, 'update');
         }
     } else if (command === 'dtfdel') { // deletes dtf voice channels
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
@@ -186,45 +181,31 @@ client.on('message', async (message) => { // manual commands
         }
     } else if (command === 'role') { // posts dtf message
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-            
+            await client.command.get('managedb').execute('deleteall', 'event_signup_ids', '', client, isTesting);
             client.command.get('mixedFriendlyAnnouncement').execute(client, Discord, message);
             client.command.get('dtfmessage').execute(client, message);
 
-            var stream = fs.createWriteStream("./messageIDs/dtfSignedUpIds.txt", {flags:'w'}); // resets dtf signups
-            stream.write("");
         }
     } else if (command === 'rem') { // tags everyone signed up ti dtf
 
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
                     
             var chan = getChannelId(client, 'dream-teams-friendly');
-            client.command.get('dtfreminder').execute(client, chan);
-
-        }
-    } else if (command === 'remadd') { // adds specific ID to dtf signups list
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-           
-            await client.command.get('managesignups').execute(args, message, client, 'add');
-
-        }
-    } else if (command === 'remdel') { // removes specific ID to dtf signups list
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-           
-            await client.command.get('managesignups').execute(args, message, client, 'del');
+            client.command.get('dtfreminder').execute(client, chan, isTesting);
 
         }
     } else if (command === 'remcheck') { // outputs the list of dtf signups
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
             
             var chan = getChannelId(client, 'monke-bot');
-            await client.command.get('dtfchecksignedup').execute(chan, client);
+            await client.command.get('dtfchecksignedup').execute(chan, client, isTesting);
 
         }
     } else if (command === 'remupdate') { // updates signup list of current signed up individuels 
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
             
             await client.command.get('managesignups').execute(args, message, client, 'update');
-
+            message.react('✅');
         }
     } else if (command === 'moveoct'){ // moves all users in the octane voice channel to fam-2 voice channel
         if (message.channel === getChannelId(client, 'superpowers-only')){
@@ -236,22 +217,30 @@ client.on('message', async (message) => { // manual commands
             }
         }
     } else if (command === 'm' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
+
         await client.command.get('newmatch').execute(args, getChannelId(client, 'op-match-announcements'), opRole.id, client, '', '', message); // creates new match announcement
+    
     } else if (command === 'mdel' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
+        
         var chan = await getChannelId(client, 'op-match-announcements');
         var messages = await chan.messages.fetch();
         var selectedMessage = await messages.find(msg => msg.id == args);
         await selectedMessage.delete();
+
     } else if (command === 'medit' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
+
         var chan = await getChannelId(client, 'op-match-announcements');
         var messages = await chan.messages.fetch();
         var selectedMessage = await messages.find(msg => msg.id == args[0]);
         args.splice(0, 1);
         await client.command.get('newmatch').execute(args, getChannelId(client, 'op-match-announcements'), opRole.id, client, 'edit', selectedMessage, message);
+
     }
 })
 
 client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
+    if (user.bot) return;
+
     var dtfChanId = getChannelId(client, 'dream-teams-friendly'); 
     var opChanId = getChannelId(client, 'op-availability');
     var dtChanId = getChannelId(client, 'dt-availability');
@@ -260,28 +249,17 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
     var lfgChan = getChannelId(client, 'lfg-role-claim');
     var logChan = getChannelId(client, 'dt-logs');
 
-    var options = {encoding: 'utf-8', flag: 'r'};
-    var dtfMessageId = fs.readFileSync('./messageIDs/roleClaimMessage.txt', options);
-    var euDtfMessageId = fs.readFileSync('./messageIDs/euDtfMessageId.txt', options);
-    var naDtfMessageId = fs.readFileSync('./messageIDs/naDtfMessageId.txt', options);
-    var opMessageId = fs.readFileSync('./messageIDs/opAvailabilityMessage.txt', options);
-    var dtMessageId = fs.readFileSync('./messageIDs/dtAvailabilityMessage.txt', options);
-    var opMatchMessageId = fs.readFileSync('./messageIDs/opMatchAnnouncementID.txt', options);
-    var dtMatchMessageId = fs.readFileSync('./messageIDs/dtMatchAnnouncementID.txt', options);
-    var lfgMessageId = fs.readFileSync('./messageIDs/lfgMessageId.txt', options);
-    var stream = fs.createWriteStream("./messageIDs/dtfSignedUpIds.txt", {flags:'a'});
-    var checkBi = await checkBiMessageId(reaction)
-
-    if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
 
-    if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == dtfMessageId){
-        dtfRole = getRole(client, 'dtf');
+    if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'roleclaim')){
+
+        var dtfRole = getRole(client, 'dtf');
         if (reaction.emoji.name === '🦧'){
             await reaction.message.guild.members.cache.get(user.id).roles.add(dtfRole.id); // gives reacted user DTF role 
         }
-    } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == lfgMessageId) {
+        
+    } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == await GetMessageId(client, 'lfg')) {
         const pavlovRole = getRole(client, 'pavlov-lfg');
         const pop1Role = getRole(client, 'pop1-lfg');
         if (reaction.emoji.name === '🍆'){
@@ -289,69 +267,76 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
         } else if (reaction.emoji.name === '💦') {
             await reaction.message.guild.members.cache.get(user.id).roles.add(pop1Role.id); // gives reacted user population 1 role 
         }
-    } else if (reaction.message.channel.id === opChanId.id && reaction.message.id == opMessageId) {
+    } else if (reaction.message.channel.id === opChanId.id) {
 
-        await client.command.get('countreactions').execute(reaction, user, 'op'); // checks sign ups for availability 
+        await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability 
 
-    } else if (reaction.message.channel.id === octaneChanId.id && checkBi > 0 && user.bot == false) {
+    } else if (reaction.message.channel.id === octaneChanId.id) {
 
-        await client.command.get('countreactions').execute(reaction, user, 'octane'); // checks sign ups for availability
+        await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
 
-    } else if (reaction.message.channel.id === opMatchChanId.id && reaction.message.id == opMatchMessageId) {
+    } else if (reaction.message.channel.id === opMatchChanId.id && reaction.message.id == await GetMessageId(client, 'opmatch')) {
 
-        await client.command.get('countreactions').execute(reaction, user, 'opmatch'); // checks sign ups for availability
+        await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
 
     } else if (reaction.message.channel.id === dtChanId.id) { // DT
+        
         var logDate = spacetime(spacetime.now).goto('America/New_York'); 
+        var dtMatchId = await GetMessageId(client, 'dtmatch');
+        var dtAvId = await GetMessageId(client, 'dtav');
 
-        if (reaction.message.id == dtMatchMessageId) {
-            await client.command.get('countreactions').execute(reaction, user, 'dtmatch'); // checks sign ups for availability
+        if (reaction.message.id == dtMatchId) {
+            await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
             // new log
             logChan.send(`**MATCH** ${user.username} Added their reaction to MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`); // adds log if someone reacts
-        } else if (reaction.message.id == dtMessageId) {
-            await client.command.get('countreactions').execute(reaction, user, 'dt'); // checks sign ups for availability
+        } else if (reaction.message.id == dtAvId) {
+            await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
             // new log
             logChan.send(`**AV** ${user.username} Added their reaction to ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`); // adds log if someone reacts
-        } else if (reaction.message.id !== dtMatchMessageId && reaction.message.id !== dtMessageId) {
+        } else if (reaction.message.id !== dtMatchId && reaction.message.id !== dtAvId) {
             // new log
             logChan.send(`**CUSTOM** ${user.username} Added their reaction ${reaction.emoji.name} to ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`); // adds log if someone reacts
         }
 
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId || reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId) {
-        var check = await checkSignUp(user);
-        if (reaction.count > 1 && check < 1) { // checks if users tried to stack an emoji on dtf availability 
-            if (!reaction._emoji.id) {
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
-            } else {
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to stack an emoji');
+    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'eudtf') || reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'nadtf')) {
+        const dbconnection = await client.command.get('dbconnection').execute(isTesting);
+        const checkQ = 'SELECT * FROM `event_signup_ids` WHERE discord_id = ' + user.id;
+        
+        dbconnection.query(checkQ, async (err, results, fields) => {
+
+            if (err) {
+                return console.log(err.message);
+            } else if (reaction.count > 1){
+                if (!reaction._emoji.id) {
+                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
+                    reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                } else {
+                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
+                    reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                }
+                 // stacking emoji
+                await client.command.get('directmessage').execute(user);
+            } else if (results.length > 0){
+                 // trying to sign up while signed up
+                 if (!reaction._emoji.id) {
+                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
+                    reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
+                } else {
+                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
+                    reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
+                }
+                 await client.command.get('uniqueemojidirectmessage').execute(user);
+            } else if (results.length < 1){
+                await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting); // new sign up
             }
 
-            await client.command.get('directmessage').execute(user);
-        }else if (check > 0){ // checks if users tried to sign up while already signed up on dtf availability
-            if (!reaction._emoji.id){
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
-            } else{
-                await stream.write(user.id + "\n");
-                reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
-                console.log(user.id + ' ' + user.username + ' tried to sign up while signed up.');
-            }
-            
-            await client.command.get('uniqueemojidirectmessage').execute(user);
-        }else{
-            await stream.write(user.id + "\n");
-            console.log(user.id + ' ' + user.username + ' has signed up');
-        }
+            dbconnection.end();
+        })
     }
 })
 
 client.on("messageReactionRemove", async (reaction, user) => {
-    var optionsR = {encoding: 'utf-8', flag: 'r'};
+    if (user.bot) return;
 
     var dtChanId = getChannelId(client, 'dt-availability');
     var dtfChanId = getChannelId(client, 'dream-teams-friendly');
@@ -359,19 +344,9 @@ client.on("messageReactionRemove", async (reaction, user) => {
     var chanId = getChannelId(client, 'dream-teams-friendly');
     var logChan = getChannelId(client, 'dt-logs');
 
-    var lfgMessageId = fs.readFileSync('./messageIDs/lfgMessageId.txt', optionsR);
-    var euDtfMessageId = fs.readFileSync('./messageIDs/euDtfMessageId.txt', optionsR);
-    var naDtfMessageId = fs.readFileSync('./messageIDs/naDtfMessageId.txt', optionsR);
-    var dtMessageId = fs.readFileSync('./messageIDs/dtAvailabilityMessage.txt', optionsR);
-    var dtMatchMessageId = fs.readFileSync('./messageIDs/dtMatchAnnouncementID.txt', optionsR);
-
-    var messageId = fs.readFileSync('./messageIDs/roleClaimMessage.txt', optionsR);
-
-    if (user.bot) return;
-
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
-    if (reaction.message.channel.id === chanId.id && reaction.message.id == messageId){
+    if (reaction.message.channel.id === chanId.id && reaction.message.id == await GetMessageId(client, 'roleclaim')){
         dtfRole = getRole(client, 'dtf');
         if (reaction.emoji.name === '🦧'){
 
@@ -379,7 +354,7 @@ client.on("messageReactionRemove", async (reaction, user) => {
             await userReaction.roles.remove(dtfRole.id);
 
         }
-    } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == lfgMessageId) {
+    } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == await GetMessageId(client, 'lfg')) {
         const pavlovRole = getRole(client, 'pavlov-lfg');
         const pop1Role = getRole(client, 'pop1-lfg');
         if (reaction.emoji.name === '🍆'){
@@ -389,24 +364,25 @@ client.on("messageReactionRemove", async (reaction, user) => {
             var lfgPopUser = await reaction.message.guild.members.cache.get(user.id);
             await lfgPopUser.roles.remove(pop1Role.id);
         }
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == euDtfMessageId){
+    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'eudtf')){
 
-        await client.command.get('removesignupid').execute(user);
+        client.command.get('managedb').execute('delete', 'event_signup_ids', user, client, isTesting);
 
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == naDtfMessageId){
+    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'nadtf')){
         
-        await client.command.get('removesignupid').execute(user);
+        client.command.get('managedb').execute('delete', 'event_signup_ids', user, client, isTesting);
 
     } else if (reaction.message.channel.id === dtChanId.id) {
+
         var logDate = spacetime(spacetime.now).goto('America/New_York');
 
-        if (reaction.message.id == dtMessageId) {
+        if (reaction.message.id == await GetMessageId(client, 'dtav')) {
             // new log
             logChan.send(`**AV** ${user.username} Removed their reaction from ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-        } else if (reaction.message.id == dtMatchMessageId) {
+        } else if (reaction.message.id == await GetMessageId(client, 'dtmatch')) {
             // new log
             logChan.send(`**MATCH** ${user.username} Removed their reaction from MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-        } else if (reaction.message.id !== dtMatchMessageId && reaction.message.id !== dtMessageId) {
+        } else if (reaction.message.id !== await GetMessageId(client, 'dtmatch') && reaction.message.id !== await GetMessageId(client, 'dtav')) {
             // new log
             logChan.send(`**CUSTOM** ${user.username} Removed their reaction ${reaction.emoji.name} from ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
         }
@@ -456,5 +432,6 @@ client.on("messageDelete", async (messageDel) => {
         client.channels.cache.get(chan.id).send(deletedEmbed);
     }
 })
+
 
 client.login(process.env.token); //process.env.token    //require("./testToken.js")
