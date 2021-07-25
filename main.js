@@ -186,7 +186,7 @@ client.on('message', async (message) => { // manual commands
             client.command.get('dtfmessage').execute(client, message);
 
         }
-    } else if (command === 'rem') { // tags everyone signed up ti dtf
+    } else if (command === 'rem') { // tags everyone signed up to dtf
 
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
                     
@@ -235,6 +235,17 @@ client.on('message', async (message) => { // manual commands
         args.splice(0, 1);
         await client.command.get('newmatch').execute(args, getChannelId(client, 'op-match-announcements'), opRole.id, client, 'edit', selectedMessage, message);
 
+    } else if (command === 'lfgedit' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
+        var LfgRoleMessage = await client.channels.cache.find(chan => chan.name == 'lfg-role-claim');
+        var lfgMessages = await LfgRoleMessage.messages.fetch();
+        var lfgRoleClaim = lfgMessages.find(msg => msg.content == '' && msg.author.bot == true);
+
+        let embed = new Discord.MessageEmbed()
+        .setTitle('Roles')
+        .setColor("ORANGE")
+        .setDescription('🍆 - Pavlov \n' + '💦 - Population One \n' + '🍑 - Walkabout')
+
+        lfgRoleClaim.edit(embed);
     }
 })
 
@@ -262,10 +273,16 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
     } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == await GetMessageId(client, 'lfg')) {
         const pavlovRole = getRole(client, 'pavlov-lfg');
         const pop1Role = getRole(client, 'pop1-lfg');
+        const walkaboutRole = getRole(client, 'walkabout-lfg');
+
         if (reaction.emoji.name === '🍆'){
             await reaction.message.guild.members.cache.get(user.id).roles.add(pavlovRole.id); // gives reacted user pavlov role 
         } else if (reaction.emoji.name === '💦') {
             await reaction.message.guild.members.cache.get(user.id).roles.add(pop1Role.id); // gives reacted user population 1 role 
+        } else if (reaction.emoji.name === '🍑'){
+            await reaction.message.guild.members.cache.get(user.id).roles.add(walkaboutRole.id);
+        } else{
+            reaction.remove();
         }
     } else if (reaction.message.channel.id === opChanId.id) {
 
@@ -357,12 +374,16 @@ client.on("messageReactionRemove", async (reaction, user) => {
     } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == await GetMessageId(client, 'lfg')) {
         const pavlovRole = getRole(client, 'pavlov-lfg');
         const pop1Role = getRole(client, 'pop1-lfg');
+        const walkaboutRole = getRole(client, 'walkabout-lfg');
         if (reaction.emoji.name === '🍆'){
             var lfgPavUser = await reaction.message.guild.members.cache.get(user.id);
             await lfgPavUser.roles.remove(pavlovRole.id);
         } else if (reaction.emoji.name === '💦') {
             var lfgPopUser = await reaction.message.guild.members.cache.get(user.id);
             await lfgPopUser.roles.remove(pop1Role.id);
+        }else if (reaction.emoji.name === '🍑'){
+            var lfgWalkaboutUser = await reaction.message.guild.members.cache.get(user.id);
+            await lfgWalkaboutUser.roles.remove(walkaboutRole.id);
         }
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'eudtf')){
 
