@@ -91,18 +91,18 @@ client.once('ready', async () => { // automatic commands
     })
 
     // auto Mixed friendly
-    schedule.scheduleJob('59 18 * * 6', () => { //
-        monkeChan.send("-dtf");
-    })
-    schedule.scheduleJob('0 1 * * 0', () => { //
-        monkeChan.send("-dtfdel");
-    })
-    schedule.scheduleJob('30 18 * * 0', () => { //
-        monkeChan.send("-role");
-    })
-    schedule.scheduleJob('0 19 * * 6', () => { //
-        monkeChan.send("-rem");
-    })
+    // schedule.scheduleJob('59 18 * * 6', () => { //
+    //     monkeChan.send("-dtf");
+    // })
+    // schedule.scheduleJob('0 1 * * 0', () => { //
+    //     monkeChan.send("-dtfdel");
+    // })
+    // schedule.scheduleJob('30 18 * * 0', () => { //
+    //     monkeChan.send("-role");
+    // })
+    // schedule.scheduleJob('0 19 * * 6', () => { //
+    //     monkeChan.send("-rem");
+    // })
 })
 
 client.on('message', async (message) => { // manual commands
@@ -164,13 +164,13 @@ client.on('message', async (message) => { // manual commands
         }
     }else if (command === 'dtf') { // creates dtf voice channels
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
-            client.command.get('createmxfchannels').execute(message);
-            await client.command.get('managesignups').execute(client, 'update', isTesting);
+            // client.command.get('createmxfchannels').execute(message);
+            // await client.command.get('managesignups').execute(client, 'update', isTesting);
         }
     } else if (command === 'dtfdel') { // deletes dtf voice channels
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
            
-            client.command.get('deletemxfchannels').execute(message);
+            // client.command.get('deletemxfchannels').execute(message);
 
         }
     } else if (command === 'lfg') {
@@ -190,8 +190,8 @@ client.on('message', async (message) => { // manual commands
 
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
                     
-            var chan = getChannelId(client, 'dream-teams-friendly');
-            client.command.get('dtfreminder').execute(client, chan, isTesting);
+            // var chan = getChannelId(client, 'dream-teams-friendly');
+            // client.command.get('dtfreminder').execute(client, chan, isTesting);
 
         }
     } else if (command === 'remcheck') { // outputs the list of dtf signups
