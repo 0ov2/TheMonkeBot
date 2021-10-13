@@ -243,7 +243,7 @@ client.on('message', async (message) => { // manual commands
         let embed = new Discord.MessageEmbed()
         .setTitle('Roles')
         .setColor("ORANGE")
-        .setDescription('🍆 - Pavlov \n' + '💦 - Population One \n' + '🍑 - Walkabout')
+        .setDescription('🍆 - Pavlov \n' + '💦 - Population One \n' + '🍑 - Walkabout \n' + '🎬 - Movie Night')
 
         lfgRoleClaim.edit(embed);
     }
@@ -274,6 +274,7 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
         const pavlovRole = getRole(client, 'pavlov-lfg');
         const pop1Role = getRole(client, 'pop1-lfg');
         const walkaboutRole = getRole(client, 'walkabout-lfg');
+        const movieRole = getRole(client, 'movie-lfg');
 
         if (reaction.emoji.name === '🍆'){
             await reaction.message.guild.members.cache.get(user.id).roles.add(pavlovRole.id); // gives reacted user pavlov role 
@@ -281,6 +282,8 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
             await reaction.message.guild.members.cache.get(user.id).roles.add(pop1Role.id); // gives reacted user population 1 role 
         } else if (reaction.emoji.name === '🍑'){
             await reaction.message.guild.members.cache.get(user.id).roles.add(walkaboutRole.id);
+        } else if (reaction.emoji.name === '🎬'){
+            await reaction.message.guild.members.cache.get(user.id).roles.add(movieRole.id);
         } else{
             reaction.remove();
         }
@@ -375,6 +378,8 @@ client.on("messageReactionRemove", async (reaction, user) => {
         const pavlovRole = getRole(client, 'pavlov-lfg');
         const pop1Role = getRole(client, 'pop1-lfg');
         const walkaboutRole = getRole(client, 'walkabout-lfg');
+        const movieRole = getRole(client, 'movie-lfg');
+
         if (reaction.emoji.name === '🍆'){
             var lfgPavUser = await reaction.message.guild.members.cache.get(user.id);
             await lfgPavUser.roles.remove(pavlovRole.id);
@@ -384,6 +389,9 @@ client.on("messageReactionRemove", async (reaction, user) => {
         }else if (reaction.emoji.name === '🍑'){
             var lfgWalkaboutUser = await reaction.message.guild.members.cache.get(user.id);
             await lfgWalkaboutUser.roles.remove(walkaboutRole.id);
+        }else if (reaction.emoji.name === '🎬'){
+            var movieNightUser = await reaction.message.guild.members.cache.get(user.id);
+            await movieNightUser.roles.remove(movieRole.id);
         }
     } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'eudtf')){
 
