@@ -45,7 +45,7 @@ client.once('ready', async () => { // automatic commands
         try {
 
         client.command.get('autoAvailability').execute(client, getChannelId(client, 'op-availability'), getRole(client, 'op'));
-        client.command.get('opMatchAnnouncement').execute(client, getChannelId(client, 'op-match-announcements'), getRole(client, 'op'));
+        //client.command.get('opMatchAnnouncement').execute(client, getChannelId(client, 'op-match-announcements'), getRole(client, 'op'));
 
         } catch (error) {
             console.log(error);
@@ -55,21 +55,21 @@ client.once('ready', async () => { // automatic commands
     })
 
     // NA
-    schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
-        console.log('monke do availability');
-        try {
+    // schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
+    //     console.log('monke do availability');
+    //     try {
 
-            client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
-            // new log
-            var logDate = spacetime(spacetime.now).goto('America/New_York');
-            logChan.send(`**New match announcement ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
+    //         client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
+    //         // new log
+    //         var logDate = spacetime(spacetime.now).goto('America/New_York');
+    //         logChan.send(`**New match announcement ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
 
-        } catch (error) {
-            console.log(error);
-        }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
 
-        console.log('monke done. *monke noises*');
-    })
+    //     console.log('monke done. *monke noises*');
+    // })
 
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         console.log('monke do availability');
