@@ -5,7 +5,7 @@ module.exports = {
 
         var checkSignupQ = 'SELECT * FROM `event_signup_ids` WHERE 1';
         const dbConnection = await client.command.get('dbconnection').execute(isTesting);
-        dbConnection.query(checkSignupQ, (err, results, fields) => {
+        await dbConnection.query(checkSignupQ, (err, results, fields) => {
             if (err){
                 return console.log(err);
             } else if (results.length == 0){

@@ -16,6 +16,8 @@ var getRole = require("./commands/getRole");
 
 var checkEmoji = require("./commands/checkEmoji");
 
+var matchTime = require("./commands/getMatchTime");
+
 var schedule = require('node-schedule');
 
 var isTesting = false;
@@ -36,7 +38,9 @@ client.once('ready', async () => { // automatic commands
     monkeChan.send('Monke online'); // ready message
     console.log('monke');
 
-    await client.command.get('managesignups').execute(client, 'update', isTesting); // update DTF signups
+    matchTime(client, getChannelId(client, 'op-match-announcements'), isTesting);
+
+    //await client.command.get('managesignups').execute(client, 'update', isTesting); // update DTF signups
 
     // Availability
     // EU
@@ -89,23 +93,13 @@ client.once('ready', async () => { // automatic commands
 
         console.log('monke done. *monke noises*');
     })
-
-    // auto Mixed friendly
-    // schedule.scheduleJob('59 18 * * 6', () => { //
-    //     monkeChan.send("-dtf");
-    // })
-    // schedule.scheduleJob('0 1 * * 0', () => { //
-    //     monkeChan.send("-dtfdel");
-    // })
-    // schedule.scheduleJob('30 18 * * 0', () => { //
-    //     monkeChan.send("-role");
-    // })
-    // schedule.scheduleJob('0 19 * * 6', () => { //
-    //     monkeChan.send("-rem");
-    // })
 })
 
 client.on('message', async (message) => { // manual commands
+    if (message.channel.id == getChannelId(client, 'op-match-announcements').id && message.content.includes('<t:')){
+        var epoch = message.content.split(":");
+        client.command.get('managedb').execute('insert', 'match_times', '', client, isTesting, epoch[1]);
+    }
 
     if(!message.content.startsWith(prefix)) return;
 
@@ -295,10 +289,6 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
 
         await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
 
-    } else if (reaction.message.channel.id === opMatchChanId.id && reaction.message.id == await GetMessageId(client, 'opmatch')) {
-
-        await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
-
     } else if (reaction.message.channel.id === dtChanId.id) { // DT
         
         var logDate = spacetime(spacetime.now).goto('America/New_York'); 
@@ -425,6 +415,11 @@ client.on("messageDelete", async (messageDel) => {
 
     await Discord.Util.delayFor(100);
 
+    if (messageDel.channel.id == getChannelId(client, 'op-match-announcements').id && messageDel.content.includes('<t:')){
+        var epoch = messageDel.content.split(":");
+        await client.command.get('managedb').execute('delete', 'match_times', '', client, isTesting, epoch[1]);
+    }
+
     if (!messageDel.partial){
         const fetchedLogs = await messageDel.guild.fetchAuditLogs({ // finds the last 6 deleted messages
             limit: 6,
@@ -438,7 +433,7 @@ client.on("messageDelete", async (messageDel) => {
         Date.now() - a.createdTimestamp < 20000
         ); // narrows down message options
     
-        const executor = auditEntry ? auditEntry.executor.tag : messageDel.author.tag; // trys to find who deleted message
+        const executor = auditEntry ? auditEntry.executor.tag : messageDel.author.tag; // tries to find who deleted message
 
         // times
         var creationsDateNa = spacetime(messageDel.createdAt).goto('America/New_York');
