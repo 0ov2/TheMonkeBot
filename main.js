@@ -202,13 +202,10 @@ client.on('message', async (message) => { // manual commands
             message.react('✅');
         }
     } else if (command === 'moveoct'){ // moves all users in the octane voice channel to fam-2 voice channel
-        if (message.channel === getChannelId(client, 'superpowers-only')){
-             // Blues id                                      Kyles id                                      0.os id
-            if (message.author.id == '660553420066783232'  || message.author.id == '392933270779854848' || message.author.id == '259466508814516224'){
+        if (message.channel === getChannelId(client, 'monke-bot')){
 
-                await client.command.get('movemembers').execute(message);
-                
-            }
+            await client.command.get('movemembers').execute(message);
+
         }
     } else if (command === 'm' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
 
