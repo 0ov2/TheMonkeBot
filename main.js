@@ -289,18 +289,13 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
     } else if (reaction.message.channel.id === dtChanId.id) { // DT
         
         var logDate = spacetime(spacetime.now).goto('America/New_York'); 
-        var dtMatchId = await GetMessageId(client, 'dtmatch');
         var dtAvId = await GetMessageId(client, 'dtav');
 
-        if (reaction.message.id == dtMatchId) {
-            await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
-            // new log
-            logChan.send(`**MATCH** ${user.username} Added their reaction to MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`); // adds log if someone reacts
-        } else if (reaction.message.id == dtAvId) {
+        if (reaction.message.id == dtAvId) {
             await client.command.get('countreactions').execute(reaction, user); // checks sign ups for availability
             // new log
             logChan.send(`**AV** ${user.username} Added their reaction to ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`); // adds log if someone reacts
-        } else if (reaction.message.id !== dtMatchId && reaction.message.id !== dtAvId) {
+        } else if (reaction.message.id !== dtAvId) {
             // new log
             logChan.send(`**CUSTOM** ${user.username} Added their reaction ${reaction.emoji.name} to ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`); // adds log if someone reacts
         }
