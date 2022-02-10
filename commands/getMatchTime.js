@@ -101,6 +101,7 @@ async function GetMatchTime(client, chan, isTesting) {
                             dbConnection4.end();
                             return;
                         } else {
+                            dbConnection4.end();
                             GetMatchTime(client, chan, isTesting);
                         }
                     });
