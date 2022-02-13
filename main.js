@@ -203,9 +203,11 @@ client.on('message', async (message) => { // manual commands
         }
     } else if (command === 'moveoct'){ // moves all users in the octane voice channel to fam-2 voice channel
         if (message.channel === getChannelId(client, 'monke-bot')){
-
-            await client.command.get('movemembers').execute(message);
-
+            try {
+                await client.command.get('movemembers').execute(message);
+            } catch (error) {
+                console.log(error);
+            }
         }
     } else if (command === 'm' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
 
@@ -386,16 +388,21 @@ client.on("messageReactionRemove", async (reaction, user) => {
     } else if (reaction.message.channel.id === dtChanId.id) {
 
         var logDate = spacetime(spacetime.now).goto('America/New_York');
+        try {
 
-        if (reaction.message.id == await GetMessageId(client, 'dtav')) {
-            // new log
-            logChan.send(`**AV** ${user.username} Removed their reaction from ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-        } else if (reaction.message.id == await GetMessageId(client, 'dtmatch')) {
-            // new log
-            logChan.send(`**MATCH** ${user.username} Removed their reaction from MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-        } else if (reaction.message.id !== await GetMessageId(client, 'dtmatch') && reaction.message.id !== await GetMessageId(client, 'dtav')) {
-            // new log
-            logChan.send(`**CUSTOM** ${user.username} Removed their reaction ${reaction.emoji.name} from ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+            if (reaction.message.id == await GetMessageId(client, 'dtav')) {
+                // new log
+                logChan.send(`**AV** ${user.username} Removed their reaction from ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+            } else if (reaction.message.id == await GetMessageId(client, 'dtmatch')) {
+                // new log
+                logChan.send(`**MATCH** ${user.username} Removed their reaction from MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+            } else if (reaction.message.id !== await GetMessageId(client, 'dtmatch') && reaction.message.id !== await GetMessageId(client, 'dtav')) {
+                // new log
+                logChan.send(`**CUSTOM** ${user.username} Removed their reaction ${reaction.emoji.name} from ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
+            }
+            
+        } catch (error) {
+            console.log(error);
         }
     }
 })
