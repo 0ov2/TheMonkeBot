@@ -15,7 +15,13 @@ module.exports = {
                     message.reply('No one is there to move!')
                 } else {
                     mems.forEach(async user => { // loops through the users currently in the voice channel
-                        await user.voice.setChannel(generalVoice); // moves user to different channel
+                        try {
+                            
+                            await user.voice.setChannel(generalVoice); // moves user to different channel
+                            
+                        } catch (error) {
+                            console.log(error);
+                        }
                     });
                 }
             } catch (error) {
