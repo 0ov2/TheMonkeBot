@@ -1,4 +1,3 @@
-var fs = require('fs');
 module.exports = {
     name: 'dtAutoAvailability',
     async execute(client, chanid, dreamRole){   
