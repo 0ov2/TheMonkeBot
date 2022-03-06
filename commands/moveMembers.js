@@ -16,7 +16,7 @@ module.exports = {
                 } else {
                     mems.forEach(async user => { // loops through the users currently in the voice channel
                         try {
-                            
+                            console.log(`Trying to move ${user.nickname}`);
                             await user.voice.setChannel(generalVoice); // moves user to different channel
                             
                         } catch (error) {
