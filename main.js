@@ -1,26 +1,16 @@
 const Discord = require('discord.js');
-
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION", "USER"]});
-
-const prefix = '-';
-
 const fs = require('fs');
-
+const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION", "USER"]});
+const prefix = '-';
 const spacetime = require('spacetime');
-
 var getChannelId = require("./commands/getChannelId");
-
 var GetMessageId = require("./commands/getMessageId");
-
 var getRole = require("./commands/getRole");
-
 var checkEmoji = require("./commands/checkEmoji");
-
 var matchTime = require("./commands/getMatchTime");
-
+require('dotenv').config();
 var schedule = require('node-schedule');
-
-var isTesting = false;
+var isTesting = process.env.TESTING;
 
 client.command = new Discord.Collection();
 
@@ -40,8 +30,6 @@ client.once('ready', async () => { // automatic commands
 
     matchTime(client, getChannelId(client, 'op-match-announcements'), isTesting);
 
-    //await client.command.get('managesignups').execute(client, 'update', isTesting); // update DTF signups
-
     // Availability
     // EU
     schedule.scheduleJob('0 18 * * 0', () => {  //* * * * * , 0 18 * * 0
@@ -49,7 +37,6 @@ client.once('ready', async () => { // automatic commands
         try {
 
         client.command.get('autoAvailability').execute(client, getChannelId(client, 'op-availability'), getRole(client, 'op'));
-        //client.command.get('opMatchAnnouncement').execute(client, getChannelId(client, 'op-match-announcements'), getRole(client, 'op'));
 
         } catch (error) {
             console.log(error);
@@ -57,23 +44,6 @@ client.once('ready', async () => { // automatic commands
 
         console.log('monke done. *monke noises*');
     })
-
-    // NA
-    // schedule.scheduleJob('0 0 * * 4', () => { //* * * * *  0 0 * * 4
-    //     console.log('monke do availability');
-    //     try {
-
-    //         client.command.get('dtMatchAnnouncement').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream'));
-    //         // new log
-    //         var logDate = spacetime(spacetime.now).goto('America/New_York');
-    //         logChan.send(`**New match announcement ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
-
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-
-    //     console.log('monke done. *monke noises*');
-    // })
 
     schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
         console.log('monke do availability');
@@ -107,7 +77,6 @@ client.on('message', async (message) => { // manual commands
     const command = args.shift().toLowerCase();
 
     const roleid = getRole(client, 'superpowers');
-    const monkeRole = getRole(client, 'Monke');
     const opRole = getRole(client, 'op');
     const dreamRole = getRole(client, 'dream');
     const octaneRole = getRole(client, 'octane');
@@ -124,82 +93,32 @@ client.on('message', async (message) => { // manual commands
             var opAvailabilityId = getChannelId(client, 'op-availability');
             var dtAvailabilityId = getChannelId(client, 'dt-availability');
             var octaneAvailabilityId = getChannelId(client, 'octane-availability');
-
-            if (message.channel.id === opAvailabilityId.id) {
-                client.command.get('autoAvailability').execute(client, opAvailabilityId, opRole.id);
-            }else if (message.channel.id === dtAvailabilityId.id) {
-                client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId, dreamRole.id);
-                // new log
-                var logDate = spacetime(spacetime.now).goto('America/New_York');
-                logChan.send(`**A new week ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
-
-            }else if (message.channel.id === octaneAvailabilityId.id) {
-                stream.write("");
-                client.command.get('octaneAutoAvailability').execute(client, octaneAvailabilityId, octaneRole.id);
-            }else {
-                return;
+            try {
+                if (message.channel.id === opAvailabilityId.id) {
+                    client.command.get('autoAvailability').execute(client, opAvailabilityId, opRole.id);
+                }else if (message.channel.id === dtAvailabilityId.id) {
+                    client.command.get('dtAutoAvailability').execute(client, dtAvailabilityId, dreamRole.id);
+                    // new log
+                    var logDate = spacetime(spacetime.now).goto('America/New_York');
+                    logChan.send(`**A new week ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
+    
+                }else if (message.channel.id === octaneAvailabilityId.id) {
+                    stream.write("");
+                    client.command.get('octaneAutoAvailability').execute(client, octaneAvailabilityId, octaneRole.id);
+                }else {
+                    return;
+                }
+            } catch (error) {
+                console.log(error);
             }
             
             message.delete();
-        }
-    } else if (command === 'avmatch'){ // post match availability message for channel
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
-            var dtAvailabilityId = getChannelId(client, 'dt-availability');
-            var opMatchAnnouncement = getChannelId(client, 'op-match-announcements');
-            if (message.channel.id === dtAvailabilityId.id){
-                client.command.get('dtMatchAnnouncement').execute(client, dtAvailabilityId, dreamRole.id);
-                //new log
-                var logDate = spacetime(spacetime.now).goto('America/New_York');
-                logChan.send(`**New match announcement ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
-
-            } else if (message.channel.id === opMatchAnnouncement.id){
-                client.command.get('opMatchAnnouncement').execute(client, opMatchAnnouncement, opRole.id);
-            }
-        }
-    }else if (command === 'dtf') { // creates dtf voice channels
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
-            // client.command.get('createmxfchannels').execute(message);
-            // await client.command.get('managesignups').execute(client, 'update', isTesting);
-        }
-    } else if (command === 'dtfdel') { // deletes dtf voice channels
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)){
-           
-            // client.command.get('deletemxfchannels').execute(message);
-
         }
     } else if (command === 'lfg') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
             
             //client.command.get('lfgmessage').execute(client, Discord, getChannelId(client, 'lfg-role-claim'));
 
-        }
-    } else if (command === 'role') { // posts dtf message
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-            await client.command.get('managedb').execute('deleteall', 'event_signup_ids', '', client, isTesting);
-            client.command.get('mixedFriendlyAnnouncement').execute(client, Discord, message);
-            client.command.get('dtfmessage').execute(client, message);
-
-        }
-    } else if (command === 'rem') { // tags everyone signed up to dtf
-
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-                    
-            // var chan = getChannelId(client, 'dream-teams-friendly');
-            // client.command.get('dtfreminder').execute(client, chan, isTesting);
-
-        }
-    } else if (command === 'remcheck') { // outputs the list of dtf signups
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-            
-            var chan = getChannelId(client, 'monke-bot');
-            await client.command.get('dtfchecksignedup').execute(chan, client, isTesting);
-
-        }
-    } else if (command === 'remupdate') { // updates signup list of current signed up individuels 
-        if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id) || message.guild.members.cache.get(message.member.id).roles.cache.has(monkeRole.id)) {
-            
-            await client.command.get('managesignups').execute(client, 'update', isTesting);
-            message.react('✅');
         }
     } else if (command === 'moveoct'){ // moves all users in the octane voice channel to fam-2 voice channel
         if (message.channel === getChannelId(client, 'monke-bot')){
@@ -245,25 +164,16 @@ client.on('message', async (message) => { // manual commands
 client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
     if (user.bot) return;
 
-    var dtfChanId = getChannelId(client, 'dream-teams-friendly'); 
     var opChanId = getChannelId(client, 'op-availability');
     var dtChanId = getChannelId(client, 'dt-availability');
     var octaneChanId = getChannelId(client, 'octane-availability');
-    var opMatchChanId = getChannelId(client, 'op-match-announcements');
     var lfgChan = getChannelId(client, 'lfg-role-claim');
     var logChan = getChannelId(client, 'dt-logs');
 
     if (reaction.message.partial) await reaction.message.fetch();
     if (reaction.partial) await reaction.fetch();
 
-    if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'roleclaim')){
-
-        var dtfRole = getRole(client, 'dtf');
-        if (reaction.emoji.name === '🦧'){
-            await reaction.message.guild.members.cache.get(user.id).roles.add(dtfRole.id); // gives reacted user DTF role 
-        }
-        
-    } else if (reaction.message.channel.id === lfgChan.id && reaction.message.id == await GetMessageId(client, 'lfg')) {
+    if (reaction.message.channel.id === lfgChan.id && reaction.message.id == await GetMessageId(client, 'lfg')) {
         const pavlovRole = getRole(client, 'pavlov-lfg');
         const pop1Role = getRole(client, 'pop1-lfg');
         const walkaboutRole = getRole(client, 'walkabout-lfg');
@@ -307,50 +217,13 @@ client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
         } catch (error) {
             console.log(error);
         }
-        
-
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'eudtf') || reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'nadtf')) {
-        const dbconnection = await client.command.get('dbconnection').execute(isTesting);
-        const checkQ = 'SELECT * FROM `event_signup_ids` WHERE discord_id = ' + user.id;
-        
-        dbconnection.query(checkQ, async (err, results, fields) => {
-
-            if (err) {
-                return console.log(err.message);
-            } else if (reaction.count > 1){
-                if (!reaction._emoji.id) {
-                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
-                    reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-                } else {
-                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
-                    reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
-                }
-                 // stacking emoji
-                await client.command.get('directmessage').execute(user);
-            } else if (results.length > 0){
-                 // trying to sign up while signed up
-                 if (!reaction._emoji.id) {
-                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
-                    reaction.message.reactions.resolve(reaction._emoji.name).users.remove(user.id);
-                } else {
-                    await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting);
-                    reaction.message.reactions.resolve(reaction._emoji.id).users.remove(user.id);
-                }
-                 await client.command.get('uniqueemojidirectmessage').execute(user);
-            } else if (results.length < 1){
-                await client.command.get('managedb').execute('insert', 'event_signup_ids', user, client, isTesting); // new sign up
-            }
-
-            dbconnection.end();
-        })
-    }
+    } 
 })
 
 client.on("messageReactionRemove", async (reaction, user) => {
     if (user.bot) return;
 
     var dtChanId = getChannelId(client, 'dt-availability');
-    var dtfChanId = getChannelId(client, 'dream-teams-friendly');
     var lfgChan = getChannelId(client, 'lfg-role-claim');
     var chanId = getChannelId(client, 'dream-teams-friendly');
     var logChan = getChannelId(client, 'dt-logs');
@@ -384,14 +257,6 @@ client.on("messageReactionRemove", async (reaction, user) => {
             var movieNightUser = await reaction.message.guild.members.cache.get(user.id);
             await movieNightUser.roles.remove(movieRole.id);
         }
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'eudtf')){
-
-        client.command.get('managedb').execute('delete', 'event_signup_ids', user, client, isTesting);
-
-    } else if (reaction.message.channel.id === dtfChanId.id && reaction.message.id == await GetMessageId(client, 'nadtf')){
-        
-        client.command.get('managedb').execute('delete', 'event_signup_ids', user, client, isTesting);
-
     } else if (reaction.message.channel.id === dtChanId.id) {
 
         var logDate = spacetime(spacetime.now).goto('America/New_York');

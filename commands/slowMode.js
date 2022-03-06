@@ -8,13 +8,16 @@ module.exports = {
             duration = 0
         }
         
-        if (duration == 10) {
-            channel.setRateLimitPerUser(parseInt(600));
-        } else if (isNaN(duration)) {
-            message.reply('Please provide either a number of seconds or the word "off"')
-            return
-        } else {
-            channel.setRateLimitPerUser(parseInt(duration));
+        try {
+            if (duration == 10) {
+                channel.setRateLimitPerUser(parseInt(600));
+            } else if (isNaN(duration)) {
+                return message.reply('Please provide either a number of seconds or the word "off"')
+            } else {
+                channel.setRateLimitPerUser(parseInt(duration));
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 }

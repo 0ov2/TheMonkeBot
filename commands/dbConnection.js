@@ -2,14 +2,15 @@ module.exports = {
     name: 'dbconnection',
     async execute(isTesting) {
       var mysql=require('mysql');
+      require('dotenv').config();
       
-      if (isTesting == true) {
+      if (isTesting == 'true') {
 
         var connection=mysql.createConnection({
-          host: "127.0.0.1", //process.env.DB_HOST
-          user: "root",  //process.env.DB_USER
-          password: "rooting", //process.env.DB_PASS
-          database: require("../DB_URL") //process.env.DATABASE
+          host: process.env.DB_HOST, //process.env.DB_HOST
+          user: process.env.DB_USER,  //process.env.DB_USER
+          password: process.env.DB_PASS, //process.env.DB_PASS
+          database: process.env.DATABASE //process.env.DATABASE
       });
 
       connection.connect(function(error){
