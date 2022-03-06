@@ -10,7 +10,7 @@ var checkEmoji = require("./commands/checkEmoji");
 var matchTime = require("./commands/getMatchTime");
 require('dotenv').config();
 var schedule = require('node-schedule');
-var isTesting = true;
+var isTesting = process.env.TESTING;
 
 client.command = new Discord.Collection();
 

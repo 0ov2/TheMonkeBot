@@ -4,7 +4,7 @@ module.exports = {
       var mysql=require('mysql');
       require('dotenv').config();
       
-      if (isTesting == true) {
+      if (isTesting == 'true') {
 
         var connection=mysql.createConnection({
           host: process.env.DB_HOST, //process.env.DB_HOST
