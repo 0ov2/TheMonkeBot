@@ -6,25 +6,11 @@ async function GetMessageId(client, messageType) {
         var roleClaim = messages.find(msg => msg.content == '' && msg.author.bot == true);
         return roleClaim.id;
 
-    } else if (messageType == 'eudtf'){
-
-        var dtfRoleMessage = await client.channels.cache.find(chan => chan.name == 'dream-teams-friendly');
-        var messages = await dtfRoleMessage.messages.fetch();
-        var dtfEuId = messages.find(msg => msg.content.includes(':regional_indicator_e:') && msg.author.bot == true);
-        return dtfEuId.id;
-
-    }else if (messageType == 'nadtf'){
-
-        var dtfRoleMessage = await client.channels.cache.find(chan => chan.name == 'dream-teams-friendly');
-        var messages = await dtfRoleMessage.messages.fetch();
-        var dtfNaId = messages.find(msg => msg.content.includes(':regional_indicator_n:') && msg.author.bot == true);
-        return dtfNaId.id;
-
     }else if (messageType == 'opav'){
 
         var opChan = await client.channels.cache.find(chan => chan.name == 'op-availability');
         var opMessages = await opChan.messages.fetch();
-        var opAvMessage = opMessages.find(msg => msg.content.includes('Monday') && msg.author.bot == true);
+        var opAvMessage = opMessages.find(msg => msg.content.includes('A -') && msg.author.bot == true);
         return opAvMessage.id;
 
     }else if (messageType == 'dtav'){
