@@ -14,8 +14,8 @@ module.exports = {
       });
 
       connection.connect(function(error){
-        if(!!error){
-          console.log(error);
+        if(error){
+          return console.log(error);
         }else{
           console.log('Connected!:)');
         }
@@ -33,8 +33,8 @@ module.exports = {
       });
       
       connection.connect(function(error){
-        if(!!error){
-          console.log(error);
+        if(error){
+          return console.log(error);
         }else{
           console.log('Connected!:)');
         }

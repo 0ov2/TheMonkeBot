@@ -34,20 +34,6 @@ async function GetMessageId(client, messageType) {
         var dtAvMessage = dtMessages.find(msg => msg.content.includes('A - Monday night') && msg.author.bot == true);
         return dtAvMessage.id;
 
-    }else if (messageType == 'opmatch'){
-
-        var opMatchChan = await client.channels.cache.find(chan => chan.name == 'op-match-announcements');
-        var opatchMessages = await opMatchChan.messages.fetch();
-        var opMatchMessage = opatchMessages.find(msg => msg.content.includes('vs DT') && msg.author.bot == true);
-        return opMatchMessage.id;
-
-    }else if (messageType == 'dtmatch'){
-
-        var opMatchChan = await client.channels.cache.find(chan => chan.name == 'dt-availability');
-        var opatchMessages = await opMatchChan.messages.fetch();
-        var opMatchMessage = opatchMessages.find(msg => msg.content.includes('vs OP') && msg.author.bot == true);
-        return opMatchMessage.id;
-
     }else if (messageType == 'lfg'){
 
         var LfgRoleMessage = await client.channels.cache.find(chan => chan.name == 'lfg-role-claim');

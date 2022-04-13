@@ -1,4 +1,3 @@
-const fs = require("fs");
 module.exports = {
     name: 'octaneAutoAvailability',
     async execute(client, chanid, roleid){    
