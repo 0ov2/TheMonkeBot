@@ -4,7 +4,7 @@ module.exports = {
     name: 'autoAvailability',
     async execute(client, ChanID, opRole){
         let epochArray = [];
-        let spaceTimeDate = spacetime().time('7:00pm').goto('Europe/London');
+        let spaceTimeDate = spacetime().time('6:00pm').goto('Europe/London');
         console.log(spaceTimeDate);
 
         // for (let i = 1; i < 8; i++){

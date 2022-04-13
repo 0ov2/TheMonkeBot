@@ -111,8 +111,6 @@ client.on('message', async (message) => { // manual commands
             } catch (error) {
                 console.log(error);
             }
-            
-            message.delete();
         }
     } else if (command === 'lfg') {
         if (message.guild.members.cache.get(message.member.id).roles.cache.has(roleid.id)){
