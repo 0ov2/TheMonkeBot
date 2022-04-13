@@ -3,14 +3,14 @@ const fs = require('fs');
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION", "USER"]});
 const prefix = '-';
 const spacetime = require('spacetime');
+const schedule = require('node-schedule');
+const isTesting = process.env.TESTING;
 var getChannelId = require("./commands/getChannelId");
 var GetMessageId = require("./commands/getMessageId");
 var getRole = require("./commands/getRole");
 var checkEmoji = require("./commands/checkEmoji");
 var matchTime = require("./commands/getMatchTime");
 require('dotenv').config();
-var schedule = require('node-schedule');
-var isTesting = process.env.TESTING;
 
 client.command = new Discord.Collection();
 
@@ -265,10 +265,7 @@ client.on("messageReactionRemove", async (reaction, user) => {
             if (reaction.message.id == await GetMessageId(client, 'dtav')) {
                 // new log
                 logChan.send(`**AV** ${user.username} Removed their reaction from ${await checkEmoji(reaction)} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-            } else if (reaction.message.id == await GetMessageId(client, 'dtmatch')) {
-                // new log
-                logChan.send(`**MATCH** ${user.username} Removed their reaction from MATCH announcement - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
-            } else if (reaction.message.id !== await GetMessageId(client, 'dtmatch') && reaction.message.id !== await GetMessageId(client, 'dtav')) {
+            } else if (reaction.message.id !== await GetMessageId(client, 'dtav')) {
                 // new log
                 logChan.send(`**CUSTOM** ${user.username} Removed their reaction ${reaction.emoji.name} from ${reaction.message.content.toString()} - ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}/${logDate.time()}\n`);
             }
