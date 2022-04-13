@@ -134,10 +134,13 @@ client.on('message', async (message) => { // manual commands
     
     } else if (command === 'mdel' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
         
-        var chan = await getChannelId(client, 'op-match-announcements');
-        var messages = await chan.messages.fetch();
+        var chan1 = await getChannelId(client, 'op-match-announcements');
+        var chan2 = await getChannelId(client, 'op-availability');
+        var messages = await chan1.messages.fetch();
+        var messages2 = await chan2.messages.fetch();
         var selectedMessage = await messages.find(msg => msg.id == args);
-        await selectedMessage.delete();
+        var selectedMessage2 = await messages2.find(msg => msg.id == args);
+        selectedMessage ? await selectedMessage.delete() : await selectedMessage2.delete()
 
     } else if (command === 'medit' && message.channel === getChannelId(client, 'monke-bot') && message.author.id == '259466508814516224'){
 
