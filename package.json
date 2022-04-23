@@ -19,6 +19,6 @@
   },
   "scripts": {
     "test": "mocha test",
-    "test-awesome": "mocha -- --reporter mochawesome"
+    "test-awesome": "mocha Test/**/*.js --reporter mochawesome"
   }
 }
