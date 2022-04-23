@@ -61,7 +61,7 @@ client.once('ready', async () => { // automatic commands
             console.log(error);
         }
 
-        console.log('monke done. *monke noises*');
+        console.log('monke done');
     })
 })
 
