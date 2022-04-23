@@ -25,7 +25,7 @@ for (const file of commandFiles){
 client.once('ready', async () => { // automatic commands
     const monkeChan = getChannelId(client, 'monke-bot');
     const logChan = getChannelId(client, 'dt-logs');
-    monkeChan.send('Monke online'); // ready message
+    monkeChan.send('🐒'); // ready message
     console.log('monke');
 
     matchTime(client, getChannelId(client, 'op-match-announcements'), isTesting);
