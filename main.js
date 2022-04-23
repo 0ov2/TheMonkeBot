@@ -32,7 +32,7 @@ client.once('ready', async () => { // automatic commands
 
     // Availability
     // EU
-    schedule.scheduleJob('0 18 * * 0', () => {  //* * * * * , 0 18 * * 0
+    schedule.scheduleJob('0 18 * * 0', () => { 
         console.log('monke do availability');
         try {
 
@@ -45,7 +45,7 @@ client.once('ready', async () => { // automatic commands
         console.log('monke done. *monke noises*');
     })
 
-    schedule.scheduleJob('0 23 * * 0', () => { //0 23 * * 0
+    schedule.scheduleJob('0 23 * * 0', () => { 
         console.log('monke do availability');
         try {
             var options = {encoding: 'utf-8', flag: 'w'};
@@ -65,7 +65,7 @@ client.once('ready', async () => { // automatic commands
     })
 })
 
-client.on('message', async (message) => { // manual commands
+client.on('message', async (message) => { 
     if (message.channel.id == getChannelId(client, 'op-match-announcements').id && message.content.includes('<t:')){
         var epoch = message.content.split(":");
         client.command.get('managedb').execute('insert', 'match_times', '', client, isTesting, epoch[1]);
@@ -162,7 +162,7 @@ client.on('message', async (message) => { // manual commands
     }
 })
 
-client.on("messageReactionAdd", async (reaction, user) => { // NEED TO RE CODE
+client.on("messageReactionAdd", async (reaction, user) => { 
     if (user.bot) return;
 
     var opChanId = getChannelId(client, 'op-availability');
@@ -310,21 +310,24 @@ client.on("messageDelete", async (messageDel) => {
 
         var timeStampNa = spacetime.now('America/New_York');
         var naDate = timeStampNa.unixFmt('yyyy.MM.dd h:mm a');
-
-        var deletedEmbed = new Discord.MessageEmbed() // outputs log of deleted message
-        .setTitle('DELETED MESSAGE')
-        .setColor("ORANGE")
-        .addField('Message', messageDel.content)
-        .addField('Channel', messageDel.channel.name)
-        .addField('Sent by', messageDel.author.username)
-        .addField('Deleted by', executor)
-        .addField('Creation and deletion', '**EST**' + '\n'
-        + `C - ${creationsDateNaFormat}` + '\n'
-        + `D - ${naDate}`)
-    
-        client.channels.cache.get(chan.id).send(deletedEmbed);
+        try {
+            var deletedEmbed = new Discord.MessageEmbed() // outputs log of deleted message
+            .setTitle('DELETED MESSAGE')
+            .setColor("ORANGE")
+            .addField('Message', messageDel.content ? messageDel.content : "Message empty")
+            .addField('Channel', messageDel.channel.name)
+            .addField('Sent by', messageDel.author.username)
+            .addField('Deleted by', executor)
+            .addField('Creation and deletion', '**EST**' + '\n'
+            + `C - ${creationsDateNaFormat}` + '\n'
+            + `D - ${naDate}`)
+        
+            client.channels.cache.get(chan.id).send(deletedEmbed);
+        } catch (error) {
+            console.log(error);
+        }
     }
 })
 
 
-client.login(process.env.token); //process.env.token    //require("./testToken.js")
+client.login(process.env.token);
