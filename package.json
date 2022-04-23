@@ -8,7 +8,6 @@
     "discord.js-commando": "^0.11.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.1",
-    "mocha": "^9.2.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
     "node-schedule": "^1.3.2",
@@ -21,6 +20,7 @@
     "test-awesome": "mocha -- --reporter mochawesome"
   },
   "devDependencies": {
-    "mochawesome": "^7.1.3"
+    "mochawesome": "^7.1.3",
+    "mocha": "^9.2.2"
   }
 }
