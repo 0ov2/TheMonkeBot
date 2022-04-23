@@ -11,6 +11,7 @@ var getRole = require("./commands/getRole");
 var checkEmoji = require("./commands/checkEmoji");
 var matchTime = require("./commands/getMatchTime");
 require('dotenv').config();
+const { exec } = require('child_process');
 
 client.command = new Discord.Collection();
 
@@ -22,11 +23,36 @@ for (const file of commandFiles){
     client.command.set(command.name, command);
 }
 
+exec("npm run test-awesome", (error, stdout, stderr) => {
+    if (error){return console.log(`error: ${error.message}`);};
+    if (stderr){return console.log(`stderr: ${stderr}`);};
+    console.log(`stdout: ${stdout}`);
+})
+
 client.once('ready', async () => { // automatic commands
     const monkeChan = getChannelId(client, 'monke-bot');
     const logChan = getChannelId(client, 'dt-logs');
-    monkeChan.send('🐒'); // ready message
+    monkeChan.send('🐒 online'); // ready message
     console.log('monke');
+    
+    await Discord.Util.delayFor(5000);
+    let rawTestData = fs.readFileSync("./mochawesome-report/mochawesome.json");
+    let jsonTestData = JSON.parse(rawTestData);
+
+    // Test report
+    monkeChan.send(` 
+    Tests: ${jsonTestData.stats.tests}\n
+    🟢Passed: ${jsonTestData.stats.passes}\n
+    🔴Failed: ${jsonTestData.stats.failures}`)
+
+    if (jsonTestData.stats.failures > 0){
+        for (let el of jsonTestData.results[0].suites[0].tests){
+            if (el.state === "failed"){
+                monkeChan.send(`
+                Title: ${el.title.trim()}\nMessage: ${el.err.estack.trim()}\n`)
+            }
+        }
+    }
 
     matchTime(client, getChannelId(client, 'op-match-announcements'), isTesting);
 
@@ -314,7 +340,7 @@ client.on("messageDelete", async (messageDel) => {
             var deletedEmbed = new Discord.MessageEmbed() // outputs log of deleted message
             .setTitle('DELETED MESSAGE')
             .setColor("ORANGE")
-            .addField('Message', messageDel.content ? messageDel.content : "Message empty")
+            .addField('Message', messageDel.content ? messageDel.content : "Message empty OR manual upload by user")
             .addField('Channel', messageDel.channel.name)
             .addField('Sent by', messageDel.author.username)
             .addField('Deleted by', executor)
@@ -328,6 +354,5 @@ client.on("messageDelete", async (messageDel) => {
         }
     }
 })
-
 
 client.login(process.env.token);

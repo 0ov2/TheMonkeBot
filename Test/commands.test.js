@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 const Discord = require('discord.js');
 const fs = require('fs');
+require('dotenv').config();
 
 const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION", "USER"]});
 client.command = new Discord.Collection();
@@ -14,7 +15,6 @@ for (const file of commandFiles){
 }
 
 describe('Test different commands', async () => {
-
     it('Test DB connections', async () => {
         const connection1 = await client.command.get('dbconnection').execute("true");
         const connection2 = await client.command.get('dbconnection').execute("false");
@@ -30,6 +30,4 @@ describe('Test different commands', async () => {
         const getChannel = require("../commands/getChannelId");
         expect(getChannel(client, 'op-match-announcement')).to.be.a('string').that.equals("Channel doesn't exist");
     })
-
 })
-
