@@ -5,9 +5,9 @@
     "passes": 2,
     "pending": 0,
     "failures": 0,
-    "start": "2022-04-23T18:52:27.741Z",
-    "end": "2022-04-23T18:52:27.794Z",
-    "duration": 53,
+    "start": "2022-04-24T12:57:08.303Z",
+    "end": "2022-04-24T12:57:08.359Z",
+    "duration": 56,
     "testsRegistered": 2,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "0078d427-3fd0-4e71-87b2-596d782448b0",
+      "uuid": "d64b34c7-67de-4944-91b9-a7f201122775",
       "title": "",
       "fullFile": "C:\\Users\\0.o\\Desktop\\TheMonkeBot\\Test\\commands.test.js",
       "file": "\\Test\\commands.test.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "a718cab2-a208-406e-96ef-2cc53a08e62a",
+          "uuid": "63879cc3-9f44-420b-9672-a01da6f13989",
           "title": "Test different commands",
           "fullFile": "C:\\Users\\0.o\\Desktop\\TheMonkeBot\\Test\\commands.test.js",
           "file": "\\Test\\commands.test.js",
@@ -38,7 +38,7 @@
               "title": "Test DB connections",
               "fullTitle": "Test different commands Test DB connections",
               "timedOut": false,
-              "duration": 43,
+              "duration": 45,
               "state": "passed",
               "speed": "medium",
               "pass": true,
@@ -47,8 +47,8 @@
               "context": null,
               "code": "const connection1 = await client.command.get('dbconnection').execute(\"true\");\nconst connection2 = await client.command.get('dbconnection').execute(\"false\");\n\nexpect(connection1).to.be.a('Object')\nexpect(connection2).to.be.a('Object')\n\nconnection1.end();\nconnection2.end();",
               "err": {},
-              "uuid": "89b2cf45-a399-4fb0-9567-3251b5859d1a",
-              "parentUUID": "a718cab2-a208-406e-96ef-2cc53a08e62a",
+              "uuid": "d2798aa8-8d86-4daf-a733-4c1a189af3f8",
+              "parentUUID": "63879cc3-9f44-420b-9672-a01da6f13989",
               "isHook": false,
               "skipped": false
             },
@@ -65,21 +65,21 @@
               "context": null,
               "code": "const getChannel = require(\"../commands/getChannelId\");\nexpect(getChannel(client, 'op-match-announcement')).to.be.a('string').that.equals(\"Channel doesn't exist\");",
               "err": {},
-              "uuid": "d7bb2e4b-4449-4f41-ac42-5efea95d84a5",
-              "parentUUID": "a718cab2-a208-406e-96ef-2cc53a08e62a",
+              "uuid": "8cc1a745-bbef-4541-bb22-099bc7bae3e1",
+              "parentUUID": "63879cc3-9f44-420b-9672-a01da6f13989",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "89b2cf45-a399-4fb0-9567-3251b5859d1a",
-            "d7bb2e4b-4449-4f41-ac42-5efea95d84a5"
+            "d2798aa8-8d86-4daf-a733-4c1a189af3f8",
+            "8cc1a745-bbef-4541-bb22-099bc7bae3e1"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 43,
+          "duration": 45,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000

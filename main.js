@@ -35,24 +35,24 @@ client.once('ready', async () => { // automatic commands
     monkeChan.send('🐒 online'); // ready message
     console.log('monke');
     
-    await Discord.Util.delayFor(5000);
-    let rawTestData = fs.readFileSync("./mochawesome-report/mochawesome.json");
-    let jsonTestData = JSON.parse(rawTestData);
+    // await Discord.Util.delayFor(5000);
+    // let rawTestData = fs.readFileSync("./mochawesome-report/mochawesome.json");
+    // let jsonTestData = JSON.parse(rawTestData);
 
-    // Test report
-    monkeChan.send(` 
-    Tests: ${jsonTestData.stats.tests}\n
-    🟢Passed: ${jsonTestData.stats.passes}\n
-    🔴Failed: ${jsonTestData.stats.failures}`)
+    // // Test report
+    // monkeChan.send(` 
+    // Tests: ${jsonTestData.stats.tests}\n
+    // 🟢Passed: ${jsonTestData.stats.passes}\n
+    // 🔴Failed: ${jsonTestData.stats.failures}`)
 
-    if (jsonTestData.stats.failures > 0){
-        for (let el of jsonTestData.results[0].suites[0].tests){
-            if (el.state === "failed"){
-                monkeChan.send(`
-                Title: ${el.title.trim()}\nMessage: ${el.err.estack.trim()}\n`)
-            }
-        }
-    }
+    // if (jsonTestData.stats.failures > 0){
+    //     for (let el of jsonTestData.results[0].suites[0].tests){
+    //         if (el.state === "failed"){
+    //             monkeChan.send(`
+    //             Title: ${el.title.trim()}\nMessage: ${el.err.estack.trim()}\n`)
+    //         }
+    //     }
+    // }
 
     matchTime(client, getChannelId(client, 'op-match-announcements'), isTesting);
 
