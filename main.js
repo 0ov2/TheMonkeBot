@@ -78,7 +78,7 @@ client.once('ready', async () => { // automatic commands
             fs.writeFileSync('./messageIDs/biAvailabilityMessageIds.txt', "", options);
             
             client.command.get('dtAutoAvailability').execute(client, getChannelId(client, 'dt-availability'), getRole(client, 'dream')); 
-            client.command.get('octaneAutoAvailability').execute(client, getChannelId(client, 'octane-availability'), getRole(client, 'octane'));
+            // client.command.get('octaneAutoAvailability').execute(client, getChannelId(client, 'octane-availability'), getRole(client, 'octane'));
             // add new log
             var logDate = spacetime(spacetime.now).goto('America/New_York');
             logChan.send(`**A new week ${logDate.date()}/${logDate.format('iso-month')}/${logDate.year()}**\n`);
